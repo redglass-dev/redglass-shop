@@ -133,7 +133,7 @@ export interface IStock extends IDataObject {
     height: number;
     length: number;
     unavailableLabel: string;
-    unitType: UnitType;
+    unitType: UnitType|null;
 }
 
 export default class Stock implements IStock {
@@ -239,7 +239,7 @@ export default class Stock implements IStock {
     height: number = 0;
     length: number = 0;
     unavailableLabel: string = '';
-    unitType: UnitType = '';
+    unitType: UnitType|null = null;
 
     tax: Tax|null = null;
 
@@ -624,6 +624,7 @@ export default class Stock implements IStock {
 
         // @ts-ignore
         tmp._costEx = undefined;
+        // @ts-ignore
         tmp.unitType = undefined;
 
         return tmp;

@@ -23,11 +23,11 @@ export default class UnitType implements IUnitType {
     wastageTitle: string = 'Cutting & Wastage';
     piecesName: string = 'Pieces';
 
-    constructor(obj? : IUnitType) {
+    constructor(obj? : Partial<IUnitType>) {
         this.update(obj);
     }
 
-    update(obj? : IUnitType) {
+    update(obj? : Partial<IUnitType>) {
         this.guid = obj && obj.guid || uuid();
         this.name = obj && obj.name || '';
         this.description = obj && obj.description || '';

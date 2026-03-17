@@ -12,10 +12,11 @@
         "types": ["vite/client"],
         "baseUrl": ".",
         "paths": {
-            "@/*": ["js/*"]
+            "@/*": ["src/js/*"],
+            "@components/*": ["src/js/components/*"],
         },
         "skipLibCheck": true,
         "isolatedModules": true
     },
-    "include": ["js/**/*.ts", "js/**/*.d.ts", "js/**/*.vue"]
+    "include": ["src/js/**/*.ts", "src/js/**/*.d.ts", "src/js/**/*.vue"]
 }
