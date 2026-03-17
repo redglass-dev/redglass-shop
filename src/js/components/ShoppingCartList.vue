@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, useSlots, computed } from 'vue'
 import uuid from 'uuid-random'
-import Customer from '@/models/contacts/Customer'
-import { useCartStore } from '@/stores/CartStore'
+import Customer from '../models/contacts/Customer'
+import { useCartStore } from '../stores/CartStore'
 import axios from 'axios'
 import AddressInput from './libraries/jl-general/controls/AddressInput.vue'
 

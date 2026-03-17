@@ -135,7 +135,7 @@
 import { ref, computed } from 'vue'
 import Big from 'big.js'
 import { push } from 'notivue'
-import { useCartStore } from '@/stores/CartStore'
+import { useCartStore } from '../stores/CartStore'
 import { StockItem as StockItemModel } from '../Cart'
 import { FormErrors } from './libraries/jl-general/helpers/Form'
 

@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useCartStore } from '@/stores/CartStore'
+import { useCartStore } from '../stores/CartStore'
 import ShoppingCartList from './ShoppingCartList.vue'
 import { Notivue, Notification, lightTheme } from 'notivue'
 import PopupControl from './PopupControl.vue'

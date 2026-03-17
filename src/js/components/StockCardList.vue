@@ -76,7 +76,7 @@
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import { Bootstrap5Pagination as Pagination } from 'laravel-vue-pagination'
-import Stock from '@/models/stock/Stock'
+import Stock from '../models/stock/Stock'
 import StockCharacteristicFilterPanel from './StockCharacteristicFilterPanel.vue'
 import StockItemControl from './StockItemControl.vue'
 

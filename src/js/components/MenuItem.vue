@@ -152,7 +152,7 @@ import { FormErrors } from './libraries/jl-general/helpers/Form'
 import Big from 'big.js'
 import { MenuItem as MenuItemModel } from '../Cart'
 import uuid from 'uuid-random'
-import { useCartStore } from '@/stores/CartStore'
+import { useCartStore } from '../stores/CartStore'
 import { push } from 'notivue'
 import axios from 'axios'
 

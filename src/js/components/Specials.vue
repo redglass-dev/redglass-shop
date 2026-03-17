@@ -63,9 +63,9 @@ import axios from 'axios'
 import Big from 'big.js'
 import { push } from 'notivue'
 import { Bootstrap5Pagination as Pagination } from 'laravel-vue-pagination'
-import { useCartStore } from '@/stores/CartStore'
-import Stock from '@/models/stock/Stock'
-import { StockItem } from '@/Cart'
+import { useCartStore } from '../stores/CartStore'
+import Stock from '../models/stock/Stock'
+import { StockItem } from '../Cart'
 
 const props = defineProps<{
   columns?: number

@@ -334,10 +334,10 @@ import flatPickr from 'vue-flatpickr-component'
 import ConfirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate'
 import 'flatpickr/dist/plugins/confirmDate/confirmDate.css'
 import Form from './libraries/jl-general/helpers/Form'
-import Formatter from '@/models/general/Formatter'
+import Formatter from '../models/general/Formatter'
 import AddressInput from './libraries/jl-general/controls/AddressInput.vue'
-import FreightProvider from '@/models/pos/FreightProvider'
-import { useCartStore } from '@/stores/CartStore'
+import FreightProvider from '../models/pos/FreightProvider'
+import { useCartStore } from '../stores/CartStore'
 import ShoppingCartList from './ShoppingCartList.vue'
 
 const props = defineProps<{

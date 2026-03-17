@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, nextTick } from 'vue'
 import axios from 'axios'
-import Stock from '@/models/stock/Stock'
+import Stock from '../models/stock/Stock'
 import StockViewControl from './StockViewControl.vue'
 import StockListItemControl from './StockListItemControl.vue'
 

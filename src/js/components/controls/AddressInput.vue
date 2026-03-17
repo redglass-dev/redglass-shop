@@ -134,7 +134,7 @@
 </template>
 
 <script setup>
-    import { EventBus } from '@/EventBus'
+    import { EventBus } from '../../EventBus'
     import Multiselect from 'vue-multiselect'
     import {nextTick, ref, watch, onBeforeMount} from "vue";
 

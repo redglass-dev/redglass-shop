@@ -31,37 +31,37 @@ import 'notivue/animations.css'
 import MenuItem from "./components/MenuItem.vue";
 
 // @ts-ignore
-import { EventBus } from '@/EventBus'
+import { EventBus } from './EventBus'
 // @ts-ignore
-import StockItem from "@components/StockItem.vue";
+import StockItem from "./components/StockItem.vue";
 // @ts-ignore
-import ShoppingCartList from "@components/ShoppingCartList.vue";
+import ShoppingCartList from "./components/ShoppingCartList.vue";
 // @ts-ignore
-import ShoppingCartButton from "@components/ShoppingCartButton.vue";
+import ShoppingCartButton from "./components/ShoppingCartButton.vue";
 // @ts-ignore
-import PopupControl from "@components/PopupControl.vue";
+import PopupControl from "./components/PopupControl.vue";
 // @ts-ignore
-import SalesTemplates from "@components/SalesTemplates.vue";
+import SalesTemplates from "./components/SalesTemplates.vue";
 // @ts-ignore
-import SalesTemplateForm from "@components/SalesTemplateForm.vue";
+import SalesTemplateForm from "./components/SalesTemplateForm.vue";
 // @ts-ignore
-import Specials from "@components/Specials.vue";
+import Specials from "./components/Specials.vue";
 // @ts-ignore
-import Checkout from "@components/Checkout.vue";
+import Checkout from "./components/Checkout.vue";
 // @ts-ignore
-import AddressInput from "@components/controls/AddressInput.vue";
+import AddressInput from "./components/controls/AddressInput.vue";
 // @ts-ignore
-import StockItemControl from "@components/StockItemControl.vue";
+import StockItemControl from "./components/StockItemControl.vue";
 // @ts-ignore
-import StockViewControl from "@components/StockViewControl.vue";
+import StockViewControl from "./components/StockViewControl.vue";
 // @ts-ignore
-import StockCarousel from "@components/StockCarousel.vue";
+import StockCarousel from "./components/StockCarousel.vue";
 // @ts-ignore
-import StockListItemControl from "@components/StockListItemControl.vue";
+import StockListItemControl from "./components/StockListItemControl.vue";
 // @ts-ignore
-import StockCardList from "@components/StockCardList.vue";
+import StockCardList from "./components/StockCardList.vue";
 // @ts-ignore
-import SurfaceAreaCalculator from "@components/SurfaceAreaCalculator.vue";
+import SurfaceAreaCalculator from "./components/SurfaceAreaCalculator.vue";
 // @ts-ignore
 import CartActions from "./components/CartActions.vue"; // Only needed if using default animations
 
