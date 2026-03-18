@@ -17,7 +17,7 @@
               type="text"
               id="query"
               name="query"
-              class="block w-full rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              class="block w-full rounded-l-md border-0 py-1.5 ps-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-0 focus:ring-1 focus:ring-gray-600 sm:text-sm sm:leading-6"
               v-model="search"
               @keypress.enter="asyncLoad(1)"
               placeholder="Search"

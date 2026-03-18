@@ -1,10 +1,10 @@
 <template>
-  <div :class="['flex flex-col lg:flex-row bg-white border-0 overflow-hidden', rowClass]" :style="rowStyle">
+  <div :class="['flex flex-col lg:flex-row border-0 overflow-hidden', rowClass]" :style="rowStyle">
     <div v-if="hasImages" class="w-full lg:w-1/2 p-0 lg:border-r border-gray-200" :style="`min-width: ${imageMinWidth}`">
       <slot name="carousel-header"></slot>
 
       <div class="relative group">
-        <div class="relative aspect-square overflow-hidden bg-gray-50">
+        <div class="relative aspect-square overflow-hidden">
           <div
             class="flex transition-transform duration-500 ease-in-out h-full"
             :style="{ transform: `translateX(-${activeImageIndex * 100}%)` }"
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Thumbnails / Indicators -->
-        <div class="flex flex-wrap justify-center gap-2 p-4 border-t border-gray-100 bg-white">
+        <div class="flex flex-wrap justify-center gap-2 p-4 border-t border-gray-100">
           <button
             v-for="(item, index) in localStock.images"
             :key="index"
@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <div v-else class="w-full lg:w-1/2 p-0 lg:border-r border-gray-200 bg-gray-50 flex flex-col">
+    <div v-else class="w-full lg:w-1/2 p-0 lg:border-r border-gray-200 flex flex-col">
       <slot name="carousel-header"></slot>
       <div class="flex-grow flex items-center justify-center min-h-[300px]">
         <h2 class="text-gray-200 text-[35vh] font-bold uppercase select-none leading-none">
@@ -105,14 +105,14 @@
       </div>
 
       <!-- Buy Panel -->
-      <div v-if="showBuyButtons && !localStock.unAvailable" class="sticky bottom-0 bg-white border-t border-gray-100 pt-4 mt-auto">
-        <div class="flex items-stretch gap-2">
-          <div v-if="showUnitType" class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+      <div v-if="showBuyButtons && !localStock.unAvailable" class="sticky bottom-0 border-t border-gray-100 pt-4 mt-auto">
+        <div class="flex items-stretch gap-0">
+          <div v-if="showUnitType" class="inline-flex items-center rounded-l-md px-3 border border-r-0 border-gray-300 text-gray-500 text-sm">
             {{ localStock.unitType?.name || 'Qty' }}
           </div>
           <input
             type="text"
-            class="flex-1 min-w-0 block w-full px-3 py-3 border-gray-300 text-center text-lg font-bold focus:ring-indigo-500 focus:border-indigo-500"
+            class="flex-1 block w-full border-gray-300 text-left text-sm px-3 ring-1 ring-inset ring-gray-300 outline-0 focus:ring-gray-600 focus:border-gray-600"
             :class="showUnitType ? '' : 'rounded-l-md'"
             v-model="qty"
             pattern="[0-9]*"

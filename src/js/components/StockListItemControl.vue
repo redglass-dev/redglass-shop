@@ -82,7 +82,7 @@
             </span>
             <input
               type="text"
-              class="flex-1 block w-full border-gray-300 text-center text-sm focus:ring-indigo-500 focus:border-indigo-500"
+              class="flex-1 block w-full border-gray-300 text-left text-sm px-3 ring-1 ring-inset ring-gray-300 outline-0 focus:ring-gray-600 focus:border-gray-600"
               :class="showUnitType ? '' : 'rounded-l-md'"
               v-model="qty"
               pattern="[0-9]*"
