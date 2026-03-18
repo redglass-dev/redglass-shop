@@ -98,7 +98,7 @@ import { computed } from 'vue'
 import axios from 'axios'
 import VueNumeric from 'vue-numeric'
 import Formatter from '../../../models/general/Formatter'
-import { Parser } from 'expr-eval'
+import { Parser } from 'expr-eval-fork'
 
 const props = withDefaults(defineProps<{
   record: any
