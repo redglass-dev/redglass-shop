@@ -72,7 +72,7 @@ export default class SalesRecord implements ISalesRecord{
         return !isNaN(parseFloat(num)) && isFinite(num);
     }
 
-    updateHeader(obj: ISalesRecord) {
+    updateHeader(obj: ISalesRecord|any) {
         this.customerGuid = obj && obj.customerGuid || '';
         this.company = obj && obj.company || '';
         this.accountGuid = obj && obj.accountGuid || '';

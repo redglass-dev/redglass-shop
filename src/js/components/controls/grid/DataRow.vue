@@ -1,384 +1,332 @@
 <template>
-    <div :class="'container-fluid p-0 m-0 ' + (isSelected && !multiSelect ? ' selected-row' : showHover) + ' hide-focus-rectangle'" tabindex="-1" @mouseenter="focus" @keyup.delete="deleteRow($event)">
-        <div :class="'row mr-0 ml-0' + (showBottomBorder ? ' border-bottom' : '')" :style="rowStyle">
-            <div v-if="draggable" class="col-pixel-width-15 ps-1 pb-1"><vue-feather type="menu" size="0.8em"></vue-feather></div>
-            <div v-else-if="locked" class="col-pixel-width-15 ps-1 pb-1"><vue-feather type="paperclip" size="0.8em"></vue-feather></div>
-            <div v-if="multiSelect" class="col-pixel-width-15 ps-1 pb-1" ><input type="checkbox" @change="$emit('row-selection-changed', record)" :checked="isSelected" /></div>
-            <div class="col">
-                <div class="row">
-                    <div v-for="(column, index) in columns" :key="column.field" :class="createRowClass(column)" @click="click($event, column)">
-                        <small class="d-block d-lg-none text-secondary font-weight-bold border-bottom">{{ column.title }}</small>
-                        <span  v-if="isChild && index === 0"><vue-feather type="corner-down-right" size="1.0em" style="vertical-align: text-top"></vue-feather>&nbsp;</span>
-                        <span v-if="column.hasOwnProperty('editor') && !disabled">
-                             <vue-numeric v-if="column.editor.hasOwnProperty('type') && column.editor.type === 'currency'"
-                                          :class="getEditInputClass(column) + ' '  + editorTextAlign(column)"
-                                          currency="$"
-                                          :precision="2"
-                                          separator=","
-                                          :value="getValue(record, column.field)"
-                                          v-on:change.native="editFieldChanged(column, $event)"
-                                          @focus="focusEditInput($event.target, column)"
-                                          @input="setValue(record, column.field, $event)"></vue-numeric>
-                            <input v-else
-                                   :class="getEditInputClass(column) + ' ' + editorTextAlign(column)"
-                                   type="text"
-                                   :value="getValue(record, column.field)"
-                                   @input="setValue(record, column.field, $event.target.value)"
-                                   @change="editFieldChanged(column, $event)"
-                                   @focus="focusEditInput($event.target, column)" />
-                        </span>
-                        <span v-else v-html="output(column, record)"></span>
-                    </div>
+  <div
+    class="relative w-full overflow-hidden focus:outline-none"
+    :class="[isSelected && !multiSelect ? 'bg-blue-500 text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-800']"
+    tabindex="-1"
+    @mouseenter="focus"
+    @keyup.delete="deleteRow($event)"
+  >
+    <div
+      class="flex flex-wrap items-center px-4 py-2"
+      :class="[showBottomBorder ? 'border-b border-gray-200 dark:border-gray-700' : '']"
+      :style="rowStyle"
+    >
+      <div v-if="draggable" class="mr-2 flex h-5 w-4 shrink-0 items-center text-gray-400">
+        <vue-feather type="menu" size="0.8em"></vue-feather>
+      </div>
+      <div v-else-if="locked" class="mr-2 flex h-5 w-4 shrink-0 items-center text-gray-400">
+        <vue-feather type="paperclip" size="0.8em"></vue-feather>
+      </div>
+      <div v-if="multiSelect" class="mr-2 flex h-5 w-4 shrink-0 items-center">
+        <input
+          type="checkbox"
+          class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          @change="$emit('row-selection-changed', record)"
+          :checked="isSelected"
+        />
+      </div>
 
-                    <slot name="child"></slot>
-                </div>
+      <div class="grow">
+        <div class="grid grid-cols-12 gap-x-4">
+          <div
+            v-for="(column, index) in columns"
+            :key="column.field"
+            :class="createRowClass(column)"
+            @click="click($event, column)"
+          >
+            <!-- Mobile label -->
+            <small class="mb-1 block border-b border-gray-100 font-bold text-gray-500 lg:hidden dark:border-gray-700">
+              {{ column.title }}
+            </small>
+
+            <div class="flex items-center">
+              <span v-if="isChild && index === 0" class="mr-1">
+                <vue-feather type="corner-down-right" size="1.0em" class="align-text-top"></vue-feather>
+              </span>
+
+              <template v-if="column.editor && !disabled">
+                <vue-numeric
+                  v-if="column.editor.type === 'currency'"
+                  :class="[getEditInputClass(column), editorTextAlign(column)]"
+                  currency="$"
+                  :precision="2"
+                  separator=","
+                  :value="getValue(record, column.field)"
+                  @change.native="editFieldChanged(column, $event)"
+                  @focus="focusEditInput($event.target, column)"
+                  @input="setValue(record, column.field, $event)"
+                ></vue-numeric>
+                <input
+                  v-else
+                  :class="[getEditInputClass(column), editorTextAlign(column)]"
+                  type="text"
+                  :value="getValue(record, column.field)"
+                  @input="setValue(record, column.field, ($event.target as HTMLInputElement).value)"
+                  @change="editFieldChanged(column, $event)"
+                  @focus="focusEditInput($event.target, column)"
+                />
+              </template>
+              <span v-else class="w-full truncate" v-html="output(column, record)"></span>
             </div>
-            <div v-if="hasFlags" class="ps-1 pe-1">
-                <span v-for="(flag, index) in flags" :key="index" class="col-pixel-width-15 text-nowrap">
-                    <vue-feather v-if="flagChecked(record[flag.field], flag)" :type="flag.iconName" size="0.8em" class="pb-1"></vue-feather>
-                    <vue-feather v-else :type="flag.iconName" size="0.8em" stroke="none" class="pb-1"></vue-feather>
-                </span>
-            </div>
+          </div>
+
+          <slot name="child"></slot>
         </div>
-        <small v-if="!showBottomBorder" class="d-block d-lg-none text-secondary font-weight-bold row-border-bottom"></small>
+      </div>
+
+      <div v-if="hasFlags" class="ml-2 flex shrink-0 items-center space-x-1">
+        <span v-for="(flag, index) in flags" :key="index" class="text-gray-400">
+          <vue-feather
+            v-if="flagChecked(record[flag.field], flag)"
+            :type="flag.iconName"
+            size="0.8em"
+            class="pb-1"
+          ></vue-feather>
+          <vue-feather v-else :type="flag.iconName" size="0.8em" stroke="none" class="pb-1"></vue-feather>
+        </span>
+      </div>
     </div>
+    <small
+      v-if="!showBottomBorder"
+      class="block border-b border-gray-400 lg:hidden dark:border-gray-600"
+    ></small>
+  </div>
 </template>
 
-<script>
-    import VueNumeric from 'vue-numeric'
-    import Formatter from '../helpers/Formatter'
-    import { Parser } from 'expr-eval'
+<script setup lang="ts">
+import { computed } from 'vue'
+import axios from 'axios'
+import VueNumeric from 'vue-numeric'
+import Formatter from '../../../models/general/Formatter'
+import { Parser } from 'expr-eval'
 
-    /**
-     * The data row should only be used by the data grid to display a row should not be accessed by anyone else.
-     */
-    export default {
-        name: "DataRow",
-        components: {
-            VueNumeric,
-        },
-        props: {
-            record: { type: Object, default: null, required: true },
+const props = withDefaults(defineProps<{
+  record: any
+  columns?: any[]
+  showBottomBorder?: boolean
+  isSelected?: boolean
+  rowStyle?: any
+  isChild?: boolean
+  lookups?: any
+  draggable?: boolean
+  formatter?: (data: any, format: any) => string
+  lookupUrl?: (column: any, objectId: any) => string
+  flags?: any[]
+  trackMouse?: boolean
+  locked?: boolean
+  disabled?: boolean
+  flagChecked?: (data: any, flag: any) => boolean
+  allowRowFocus?: boolean
+  multiSelect?: boolean
+}>(), {
+  columns: () => [{ field: 'name', width: 12, format: 'string', title: 'Name', class: '' }],
+  showBottomBorder: true,
+  isSelected: false,
+  rowStyle: '',
+  isChild: false,
+  lookups: () => ({}),
+  draggable: false,
+  formatter: function(data: any, format: any) {
+    // @ts-ignore
+    return (new Formatter()).format(data, format)
+  },
+  lookupUrl: function(column: any, objectId: any) {
+    // @ts-ignore
+    return (window.Prefix || '') + column.format.url + '/' + objectId
+  },
+  flags: () => [],
+  trackMouse: true,
+  locked: false,
+  disabled: false,
+  flagChecked: (data: any, flag: any) => !!data,
+  allowRowFocus: true,
+  multiSelect: false
+})
 
-            columns: { type: Array, default: () => [
-                    { field: "name", width: 12, format: "string", title: "Name", class: "" },
-            ] },
+const emit = defineEmits<{
+  (e: 'row-selection-changed', record: any): void
+  (e: 'lookup-added', payload: { column: any, data: any, doUpdate?: boolean }): void
+  (e: 'on-clicked'): void
+  (e: 'field-changed', data: any): void
+  (e: 'delete-row', record: any, event: any): void
+  (e: 'rowChecked', data: any): void
+}>()
 
-            showBottomBorder: { type: Boolean, default: true },
+const hasFlags = computed(() => {
+  return props.flags.length > 0
+})
 
-            isSelected: { type: Boolean, default: false },
+const focusEditInput = (target: any, column: any) => {
+  if (column.onEditInputFocus) {
+    column.onEditInputFocus(target)
+  } else {
+    selectText(target)
+  }
+}
 
-            rowStyle: { type: String, default: '' },
+const getEditInputClass = (column: any) => {
+  return column.editInputClass || 'form-input'
+}
 
-            isChild: { type: Boolean, default: false },
+const createRowClass = (column: any) => {
+  const widthClasses: Record<number, string> = {
+    1: 'lg:col-span-1',
+    2: 'lg:col-span-2',
+    3: 'lg:col-span-3',
+    4: 'lg:col-span-4',
+    5: 'lg:col-span-5',
+    6: 'lg:col-span-6',
+    7: 'lg:col-span-7',
+    8: 'lg:col-span-8',
+    9: 'lg:col-span-9',
+    10: 'lg:col-span-10',
+    11: 'lg:col-span-11',
+    12: 'lg:col-span-12'
+  }
+  return (widthClasses[column.width] || 'lg:col-span-12') + ' ' + (column.class || '') + ' ' + editorTextAlign(column)
+}
 
-            lookups: { type: Array, default: () => []},
+const focus = (e: any) => {
+  if (props.allowRowFocus) {
+    e.target.focus()
+  }
+}
 
-            draggable: { type: Boolean, default: false },
+const deleteRow = (e: any) => {
+  if (e.target.nodeName === 'DIV') {
+    emit('delete-row', props.record, e)
+  }
+}
 
-            formatter: { type: Function, default: function(data, format) { return this.format.format(data, format) } },
+const getValue = (data: any, key: string): any => {
+  if (!data) return undefined
+  const tmp = key.split('.')
+  if (tmp.length > 1) {
+    const d = data[tmp[0]]
+    tmp.splice(0, 1)
+    return getValue(d, tmp.join('.'))
+  }
+  return data[key]
+}
 
-            lookupUrl: { type: Function, default: function(column, objectId) { return window.Prefix + column.format.url + '/' + objectId; } },
+const setValue = (data: any, key: string, value: any) => {
+  if (!data) return
+  const tmp = key.split('.')
+  if (tmp.length > 1) {
+    const d = data[tmp[0]]
+    tmp.splice(0, 1)
+    return setValue(d, tmp.join('.'), value)
+  }
+  data[key] = value
+}
 
-            flags: { type: Array, default: () => [] },
+const output = (column: any, data: any): string => {
+  if (column.formula) {
+    const fields = column.formula.split(/[ ,+\-*/\)\(]+/)
+    const values: Record<string, any> = {}
 
-            trackMouse: { type: Boolean, default: true },
+    fields.forEach((element: string) => {
+      const item = getValue(data, element)
+      if (typeof item !== 'undefined') {
+        values[element] = item
+      }
+    })
 
-            locked: { type: Boolean, default: false },
+    const result = Parser.evaluate(column.formula, values)
+    const formatted = props.formatter(result, column.format)
+    return formatted === '' ? '&nbsp;' : formatted
+  } else {
+    let key = column.field
+    let formatStyle = column.format
+    let fieldValue = getValue(data, key)
 
-            disabled: { type: Boolean, default: false },
+    // Lookup fields
+    if (column.format && column.format.type === 'lookup') {
+      key = column.format.key ? column.format.key.split('.') : column.format.field.split('.')
 
-            flagChecked: { type: Function, default: function(data, flag) { return data; } },
-
-            allowRowFocus: { type: Boolean, default: true },
-
-            multiSelect: {type: Boolean, default: false },
-        },
-        data() {
-            return {
-                format: new Formatter(),
-                loginChanges: false,
-                // checkValue: this.multiSelectValue,
-            }
-        },
-        // watch: {
-        //     checkValue: function (value){
-        //         this.$emit("rowSelected",  this.record);
-        //     }
-        // },
-        computed: {
-            hasFlags: function() {
-                this.$emit("rowChecked",  [this.record, this.checkValue] );
-                // Has Flags
-                return this.flags.length > 0;
-            },
-            showHover: function () {
-                return this.trackMouse ? ' detail-row' : '';
-            }
-        },
-        methods: {
-            focusEditInput(target, column) {
-                column.hasOwnProperty('onEditInputFocus') ? column.onEditInputFocus(target) : this.selectText(target);
-            },
-
-            getEditInputClass(column) {
-                return column.hasOwnProperty('editInputClass') ? column.editInputClass : 'form-input';
-            },
-
-            createRowClass(column) {
-                return 'col-lg-' + column.width + ' ' + column.class + ' ' + this.editorTextAlign(column)
-            },
-
-            /**
-             * Focus's the target
-             */
-            focus(e) {
-                if(this.allowRowFocus)
-                {
-                    e.target.focus();
-                }
-            },
-
-            /**
-             * Fires the row delete-row event so you can remove the row.
-             * @param e The element that was active.
-             */
-            deleteRow(e) {
-                if(e.target.nodeName === "DIV") {
-                    this.$emit('delete-row', this.record, e);
-                }
-            },
-
-            setInput(column, event) {
-                this.$emit('input', event);
-            },
-
-            /**
-             * Gets the data value for a dot notation key eg supplier_balances.currentTotal
-             * @param data The data object to search in.
-             * @param key The key to look for.
-             */
-            getValue(data, key) {
-                let tmp = key.split('.');
-                if(tmp.length > 1) {
-                    let d = data[tmp[0]];
-                    tmp.splice(0, 1);
-                    return this.getValue(d, tmp.join('.'));
-                }
-
-                return data[key];
-            },
-
-            setValue(data, key, value) {
-                let tmp = key.split('.');
-                if(tmp.length > 1) {
-                    let d = data[tmp[0]];
-                    tmp.splice(0, 1);
-                    return this.setValue(d, tmp.join('.'), value);
-                }
-
-                data[key] = value;
-            },
-
-            /**
-             * Gets the output for the cell to be printed.
-             * @param column The column that we are getting the output for.
-             * @param data The data that we want to display the cell for.
-             */
-            output(column, data) {
-                if(column.hasOwnProperty('formula')) {
-                    var value = 0;
-
-                    let fields = column.formula.split(/[ ,+\-*/\)\(]+/)
-                    let values = {};
-
-                    fields.forEach(element => {
-                        let item = this.getValue(data, element)
-                        if(typeof item !== 'undefined') {values[element] = item}
-                    });
-
-                    var output = '';
-
-                    output = this.formatter(Parser.evaluate(column.formula, values), column.format);
-
-                    return output === "" ? '&nbsp;' : output;
-                }
-                else {
-                    var key = column.field;
-                    var formatStyle = column.format;
-                    var fieldValue = this.getValue(data, key);
-
-                    // Lookup fields
-                    if((column.format instanceof Object) && column.format.type === 'lookup') {
-                        var items = [];
-
-                        // Sets the key to lookup
-                        key = column.format.hasOwnProperty('key') ? column.format.key.split('.') : column.format.field.split('.');
-
-                        var found = false;
-                        // If we have data for this lookup
-                        if (this.lookups.hasOwnProperty(key)) {
-                            // If we have a matching record for this item.
-                            if (this.lookups[key].hasOwnProperty(data[key])) {
-                                let obj = this.lookups[key][data[key]];
-                                found = true;
-                                if (obj && (obj[column.format.field] || obj.hasOwnProperty(column.format.field))) {
-                                    formatStyle = column.format.format;
-                                    fieldValue = obj[column.format.field];
-                                }
-                            }
-                        }
-
-                        if(!found) {
-                            // Lets add a blank copy so we do not try and get this record multiple times.
-                            let trackField = column.format.hasOwnProperty("trackField") ? column.format.trackField : "guid";
-                            let tmp = {};
-                            tmp[trackField] = data[key];
-                            if(typeof data[key] !== 'undefined') {
-                                this.$emit('lookup-added', {column: column, data: tmp, doUpdate: false});
-
-                                // Lets get the actual copy.
-                                axios.get(this.lookupUrl(column, data[key])).then(response => {
-                                    if (response.status === 200) {
-                                        let data = response.data;
-                                        if (data.hasOwnProperty(column.format.field)) {
-                                            this.$emit('lookup-added', {column: column, data: data});
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-
-                    var output = '';
-
-                    output = this.formatter(fieldValue, formatStyle);
-
-                    return output === "" ? '&nbsp;' : output;
-                }
-            },
-
-            /**
-             * Fires on row clicked.
-             * @param event
-             * @param column
-             */
-            click(event, column) {
-                console.log(event);
-                if(!column.hasOwnProperty('editor')) {
-                    this.$emit('on-clicked');
-                }
-            },
-
-            selectText(target) {
-                if (navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) {
-                    setTimeout(function () {
-                        target.setSelectionRange(0, 9999);
-                    }, 1);
-                } else {
-                    target.select();
-                }
-            },
-
-            editorTextAlign(column) {
-                if(column.hasOwnProperty('align')) {
-                    if(column.align === 'left') {
-                        return 'text-start';
-                    } else if (column.align === 'center') {
-                        return 'text-center';
-                    } else {
-                        return 'text-end';
-                    }
-                }
-
-                var format = column.format;
-
-                if(column.format instanceof Object === true) {
-                    format = column.format.type;
-                }
-
-                if(format === 'number') {
-                    return 'text-end';
-                } else {
-                    return 'text-start';
-                }
-            },
-
-            editFieldChanged(column, event) {
-                // Edit Field Changed on row
-                this.$forceUpdate();
-                this.$emit('field-changed', {column: column, data: this.record})
-            }
+      let found = false
+      if (props.lookups[key]) {
+        if (props.lookups[key][data[key]]) {
+          const obj = props.lookups[key][data[key]]
+          found = true
+          if (obj && (obj[column.format.field] !== undefined)) {
+            formatStyle = column.format.format
+            fieldValue = obj[column.format.field]
+          }
         }
+      }
+
+      if (!found) {
+        const trackField = column.format.trackField || 'guid'
+        const tmp: any = {}
+        tmp[trackField] = data[key]
+        if (data[key] !== undefined) {
+          emit('lookup-added', { column, data: tmp, doUpdate: false })
+
+          axios.get(props.lookupUrl(column, data[key])).then((response) => {
+            if (response.status === 200) {
+              const resData = response.data
+              if (resData[column.format.field] !== undefined) {
+                emit('lookup-added', { column, data: resData })
+              }
+            }
+          })
+        }
+      }
     }
+
+    const formatted = props.formatter(fieldValue, formatStyle)
+    return formatted === '' ? '&nbsp;' : formatted
+  }
+}
+
+const click = (event: any, column: any) => {
+  if (!column.editor) {
+    emit('on-clicked')
+  }
+}
+
+const selectText = (target: any) => {
+  if (navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) {
+    setTimeout(() => {
+      target.setSelectionRange(0, 9999)
+    }, 1)
+  } else {
+    target.select()
+  }
+}
+
+const editorTextAlign = (column: any) => {
+  if (column.align) {
+    if (column.align === 'left') return 'text-left'
+    if (column.align === 'center') return 'text-center'
+    return 'text-right'
+  }
+
+  let format = column.format
+  if (column.format && typeof column.format === 'object') {
+    format = column.format.type
+  }
+
+  if (format === 'number' || format === 'currency') return 'text-right'
+  return 'text-left'
+}
+
+const editFieldChanged = (column: any, event: any) => {
+  emit('field-changed', { column, data: props.record })
+}
 </script>
 
-<style>
-    .detail-row :hover {
-        background: #eeeeee;
-    }
-
-    .row-border-bottom {
-        border-bottom: rgb(128, 128, 128) solid 1px;
-    }
-
-    .selected-row {
-        background: #00AAFF;
-        color: white;
-    }
-
-    .selected-row:hover {
-        background: #0362ff;
-        color: white;
-    }
-</style>
-
 <style scoped>
-    .col-pixel-width-15 { flex: 0 0 10px; color: lightgrey; }
+.form-input {
+  @apply w-full border-0 border-b border-gray-300 bg-transparent px-0.5 py-0.5 text-sm leading-none outline-none focus:border-blue-500 focus:ring-0 dark:border-gray-600;
+}
 
-    /*
-    Form input
-    */
-    .form-input {
-        border: none;
-        width: 100%;
-        outline: none !important;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-        border-bottom: lightgray solid 1px;
-        margin-bottom: 0px;
-        border-radius: 0px;
-        height: 1.25rem;
-        padding: 0.125rem 0.125rem;
-        font-size: .8rem;
-        line-height: 1.0;
-    }
+.form-input[readonly] {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
 
-    .form-input:hover {
-        border-color: #00AAFF;
-    }
-
-    .form-input:focus {
-        color: #495057;
-        background-color: #fff;
-        border-color: #80bdff;
-        outline: 0;
-        -webkit-box-shadow: 0 0 0 0.0rem rgba(0, 123, 255, 0.25);
-        box-shadow: 0 0 0 0.0rem rgba(0, 123, 255, 0.25);
-    }
-
-    .form-input:hover[readonly] {
-        border-color: lightgray;
-    }
-
-    .form-input:focus[readonly] {
-        background-color: #ebeef6;
-        border-color: lightgray;
-    }
-
-    .form-input:disabled,
-    .form-input[readonly] {
-        background-color: #ebeef6;
-        opacity: 1;
-    }
+.form-input:disabled {
+  @apply bg-gray-100 opacity-60 dark:bg-gray-800;
+}
 </style>

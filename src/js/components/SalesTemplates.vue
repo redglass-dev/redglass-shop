@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import axios from 'axios'
-import DataGrid from './libraries/rg-vue-grid/grid/DataGrid.vue'
+import DataGrid from './controls/grid/DataGrid.vue'
 import DeleteConfirmationDialog from './controls/DeleteConfirmationDialog.vue'
 import SalesTemplate from '../models/sales/SalesTemplate'
 
