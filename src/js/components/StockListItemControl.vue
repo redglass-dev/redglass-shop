@@ -109,7 +109,7 @@ import axios from 'axios'
 import Stock from '../models/stock/Stock'
 import { useCartStore } from '../stores/CartStore'
 import { StockItem as StockItemModel } from '../Cart'
-import { FormErrors } from './libraries/jl-general/helpers/Form'
+import { FormErrors } from '../Form'
 
 const props = defineProps<{
   stockGuid?: string

@@ -145,7 +145,7 @@ import { StockItem as StockItemModel } from '../Cart'
 import Stock from '../models/stock/Stock'
 import StockOptionControl from './StockOptionControl.vue'
 import SurfaceAreaCalculator from './SurfaceAreaCalculator.vue'
-import { FormErrors } from './libraries/jl-general/helpers/Form'
+import { FormErrors } from '../Form'
 
 const props = defineProps<{
   stockGuid?: string

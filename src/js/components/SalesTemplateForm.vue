@@ -132,12 +132,12 @@ import axios from 'axios'
 import Big from 'big.js'
 import { push } from 'notivue'
 import DataGrid from './libraries/rg-vue-grid/grid/DataGrid.vue'
-import Form from './libraries/jl-general/helpers/Form'
-import DeleteConfirmationDialog from './libraries/jl-general/DeleteConfirmationDialog.vue'
-import SalesTemplate from './libraries/jl-data-objects/Sales/SalesTemplate'
-import SalesTemplateDetail from './libraries/jl-data-objects/Sales/SalesTemplateDetail'
+import Form from '../Form'
+import DeleteConfirmationDialog from './controls/DeleteConfirmationDialog.vue'
+import SalesTemplate from '../models/sales/SalesTemplate'
+import SalesTemplateDetail from '../models/sales/SalesTemplateDetail'
 import SalesTemplateDetailDialog from './SalesTemplateDetailDialog.vue'
-import Formatter from './libraries/jl-general/helpers/Formatter'
+import Formatter from '../models/general/Formatter'
 
 const props = defineProps<{
   salesTemplateGuid?: string

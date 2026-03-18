@@ -33,8 +33,8 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import DataGrid from './libraries/rg-vue-grid/grid/DataGrid.vue'
-import DeleteConfirmationDialog from './libraries/jl-general/DeleteConfirmationDialog.vue'
-import SalesTemplate from './libraries/jl-data-objects/Sales/SalesTemplate'
+import DeleteConfirmationDialog from './controls/DeleteConfirmationDialog.vue'
+import SalesTemplate from '../models/sales/SalesTemplate'
 
 const props = defineProps<{
   useCard?: boolean

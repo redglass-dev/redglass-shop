@@ -95,8 +95,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import axios from 'axios'
-import Form from './libraries/jl-general/helpers/Form'
-import Stock from './libraries/jl-data-objects/Stock/Stock'
+import Form from '../Form'
+import Stock from '../models/stock/Stock'
 import Big from 'big.js'
 import Multiselect from 'vue-multiselect'
 

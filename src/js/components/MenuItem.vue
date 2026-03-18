@@ -148,7 +148,7 @@
 
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue'
-import { FormErrors } from './libraries/jl-general/helpers/Form'
+import { FormErrors } from '../Form'
 import Big from 'big.js'
 import { MenuItem as MenuItemModel } from '../Cart'
 import uuid from 'uuid-random'

@@ -4,7 +4,7 @@ import uuid from 'uuid-random'
 import Customer from '../models/contacts/Customer'
 import { useCartStore } from '../stores/CartStore'
 import axios from 'axios'
-import AddressInput from './libraries/jl-general/controls/AddressInput.vue'
+import AddressInput from './controls/AddressInput.vue'
 
 const props = defineProps<{
   allowEdit?: boolean
