@@ -183,7 +183,11 @@ const createRowClass = (column: any) => {
     11: 'lg:col-span-11',
     12: 'lg:col-span-12'
   }
-  return (widthClasses[column.width] || 'lg:col-span-12') + ' ' + (column.class || '') + ' ' + editorTextAlign(column)
+  return [
+    widthClasses[column.width] || 'lg:col-span-12',
+    column.class || '',
+    editorTextAlign(column)
+  ].join(' ')
 }
 
 const focus = (e: any) => {
@@ -318,6 +322,8 @@ const editFieldChanged = (column: any, event: any) => {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
+
 .form-input {
   @apply w-full border-0 border-b border-gray-300 bg-transparent px-0.5 py-0.5 text-sm leading-none outline-none focus:border-blue-500 focus:ring-0 dark:border-gray-600;
 }

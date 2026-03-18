@@ -38,7 +38,7 @@
         "vue-feather": "^2.0.0",
         "vue-flatpickr-component": "^11.0.5",
         "vue-multiselect": "^3.1.0",
-        "vuedraggable": "^2.24.3",
+        "vuedraggable": "^4.1.0",
         "expr-eval": "^2.0.2",
         "vue-numeric": "^2.3.0"
     }

@@ -12,7 +12,7 @@
               v-for="(column, index) in workingColumns"
               :key="column.field"
               class="flex cursor-pointer items-center truncate text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
-              :class="[editorTextAlign(column), headingClass, `lg:col-span-${column.width}`]"
+              :class="[editorTextAlign(column), headingClass, getColumnSpanClass(column.width)]"
               :style="allowColumnChooser && index === 0 ? 'padding-left: 0px' : ''"
               @click="sortBy(column)"
             >
@@ -162,7 +162,7 @@
             v-for="column in workingColumns"
             :key="column.field"
             class="truncate text-xs font-bold"
-            :class="[column.class, editorTextAlign(column), `lg:col-span-${column.width}`]"
+            :class="[column.class, editorTextAlign(column), getColumnSpanClass(column.width)]"
           >
             <span v-if="runningTotals.hasOwnProperty(column.field)">{{ output(runningTotals[column.field]) }}</span>
           </div>
@@ -328,6 +328,24 @@ const emit = defineEmits<{
   (e: 'row-changed', item: any): void
   (e: 'field-changed', data: any): void
 }>()
+
+const getColumnSpanClass = (width: number) => {
+  const spans: Record<number, string> = {
+    1: 'lg:col-span-1',
+    2: 'lg:col-span-2',
+    3: 'lg:col-span-3',
+    4: 'lg:col-span-4',
+    5: 'lg:col-span-5',
+    6: 'lg:col-span-6',
+    7: 'lg:col-span-7',
+    8: 'lg:col-span-8',
+    9: 'lg:col-span-9',
+    10: 'lg:col-span-10',
+    11: 'lg:col-span-11',
+    12: 'lg:col-span-12'
+  }
+  return spans[width] || 'lg:col-span-12'
+}
 
 // State
 const loading = ref(false)
