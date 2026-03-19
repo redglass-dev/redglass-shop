@@ -10,7 +10,10 @@
             :style="{ transform: `translateX(-${activeImageIndex * 100}%)` }"
           >
             <div v-for="(item, index) in localStock.images" :key="index" class="w-full h-full flex-shrink-0 flex items-center justify-center">
-              <img class="max-h-full max-w-full object-contain" :src="item.uriLink" :alt="item.name" />
+              <img class="max-h-full max-w-full object-contain"
+                   :src="`/storage/stocks/${item.stockGuid}/images/${item.guid}.jpg`"
+                   :alt="item.description"
+              />
             </div>
           </div>
         </div>
@@ -24,7 +27,10 @@
             :class="activeImageIndex === index ? 'border-indigo-600 ring-2 ring-indigo-600/20' : 'border-transparent hover:border-gray-300'"
             @click="activeImageIndex = index"
           >
-            <img class="w-full h-full object-cover" :src="item.uriLink" />
+            <img class="w-full h-full object-cover"
+                 :src="`/storage/stocks/${item.stockGuid}/images/${item.guid}.jpg`"
+                 :alt="item.description"
+            />
           </button>
         </div>
       </div>
@@ -203,11 +209,13 @@ const updateOptions = () => {
 }
 
 const loadStock = (stockData: any) => {
-  localStock.value = new Stock(stockData)
-  updateOptions()
+    localStock.value = new Stock(stockData)
+    console.log('localStock', localStock.value)
+    updateOptions()
 }
 
 onMounted(async () => {
+    console.log('props', props)
   if (props.stock) {
     loadStock(props.stock)
     return

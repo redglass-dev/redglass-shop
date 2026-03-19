@@ -1,11 +1,11 @@
 <template>
   <div class="w-full h-full flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
     <div class="relative w-full aspect-square bg-gray-50 flex items-center justify-center cursor-pointer" @click="$emit('more-info')">
-      <template v-if="localStock.wideImage">
+      <template v-if="localStock.images && localStock.images.length > 0">
         <img
           class="w-full h-full object-contain"
-          :src="localStock.wideImage.uriLink"
-          :alt="localStock.wideImage.description"
+          :src="`/storage/stocks/${localStock.images[0].stockGuid}/images/${localStock.images[0].guid}.jpg`"
+          :alt="localStock.images[0].description"
         />
         <div v-if="localStock.unAvailable" class="absolute bottom-0 left-0 bg-red-600 px-2 py-1">
           <span class="text-xs font-bold text-white uppercase">{{ localStock.unavailableLabel }}</span>

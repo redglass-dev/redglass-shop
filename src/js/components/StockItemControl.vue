@@ -77,6 +77,7 @@ const stockViewControl = ref<any>(null)
 
 const loadStock = (stock: any) => {
   localStock.value = new Stock(stock)
+    console.log('StockItemControl loadStock', localStock.value)
 }
 
 watch(

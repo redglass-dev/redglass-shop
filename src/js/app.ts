@@ -61,6 +61,8 @@ import StockListItemControl from "./components/StockListItemControl.vue";
 // @ts-ignore
 import StockCardList from "./components/StockCardList.vue";
 // @ts-ignore
+import StockCardListNew from "./components/StockCardListNew.vue";
+// @ts-ignore
 import SurfaceAreaCalculator from "./components/SurfaceAreaCalculator.vue";
 // @ts-ignore
 import CartActions from "./components/CartActions.vue"; // Only needed if using default animations
@@ -126,6 +128,7 @@ export function registerRedglassShop(app: any) {
     app.component("stock-list-item-control", StockListItemControl)
     app.component("stock-carousel", StockCarousel)
     app.component("stock-card-list", StockCardList)
+    app.component('stock-card-list-new', StockCardListNew)
     app.component("surface-area-calculator", SurfaceAreaCalculator)
 }
 

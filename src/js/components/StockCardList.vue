@@ -106,6 +106,7 @@ const errorLoading = ref(false)
 const loading = ref(false)
 const search = ref(props.query || '')
 const asyncPage = ref<any>({ data: [] })
+const asyncUrl = "/api/v1/public/stocks"
 const filters = ref('')
 const hasCharacteristicGroups = ref(true)
 const stock = ref(new Stock())
@@ -157,7 +158,7 @@ const asyncLoad = async (page: number = 1) => {
 
   try {
     const response = await axios.get(
-      `/api/v1/public/stocks?page=${page}${searchString}${tmpFilter}&per_page=${limit}`
+      `${asyncUrl}?page=${page}${searchString}${tmpFilter}&per_page=${limit}`
     )
     asyncPage.value = response.data
     asyncPage.value.data = response.data.data.map((record: any) => new Stock(record))
@@ -183,6 +184,7 @@ const asyncLoad = async (page: number = 1) => {
 }
 
 onMounted(() => {
+    console.log('onMounted')
   updateFilter('') // Initial load
   if (searchStockKey.value && stock.value) {
     stockItemRef.value?.showStock()
