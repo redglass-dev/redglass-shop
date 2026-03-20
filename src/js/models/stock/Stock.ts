@@ -134,6 +134,8 @@ export interface IStock extends IDataObject {
     length: number;
     unavailableLabel: string;
     unitType: UnitType|null;
+    slug: string;
+    pluSlug: string;
 }
 
 export default class Stock implements IStock {
@@ -252,6 +254,8 @@ export default class Stock implements IStock {
     glSurchargeGuid: string = '';
     glDiscountGuid: string = '';
     glSalesGuid: string = '';
+    slug: string = '';
+    pluSlug: string = '';
 
     images: string[] = [];
 
@@ -590,6 +594,8 @@ export default class Stock implements IStock {
         this.height = obj && obj.height || 0.00;
         this.length = obj && obj.length || 0.00;
         this.unavailableLabel = obj && obj.unavailableLabel || "Out Of Stock";
+        this.slug = obj && obj.slug || '';
+        this.pluSlug = obj && obj.pluSlug || '';
 
         this.images = obj && obj.images || [];
 

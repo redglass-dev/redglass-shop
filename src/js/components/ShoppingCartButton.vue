@@ -19,28 +19,30 @@
 
         <popup-control :show="showModal" @close="showModal = false" :parent="id">
             <template #header>
-                <slot name="above-header"></slot>
-                <div class="flex justify-between items-center w-full mb-2">
-                    <strong class="text-sm font-bold text-gray-900">Your Cart</strong>
-                    <strong v-if="hidePrices" class="text-sm text-gray-700">Items: {{ store.cart.count }}</strong>
-                    <strong v-else class="text-sm text-gray-700">${{ store.cart.totalWithFreight.toFixed(2) }}</strong>
-                </div>
-                <hr class="border-gray-200 mb-2"/>
-                <div class="flex justify-between items-center w-full gap-2">
-                    <button
-                        type="button"
-                        class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none"
-                        @click="store.cart.clear()"
-                    >
-                        Clear
-                    </button>
-                    <a
-                        v-if="store.cart.count > 0"
-                        :href="checkoutUrl"
-                        class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none"
-                    >
-                        Checkout
-                    </a>
+                <div class="p-3">
+                    <slot name="above-header"></slot>
+                    <div class="flex justify-between items-center w-full mb-2">
+                        <strong class="text-sm font-bold text-gray-900">Your Cart</strong>
+                        <strong v-if="hidePrices" class="text-sm text-gray-700">Items: {{ store.cart.count }}</strong>
+                        <strong v-else class="text-sm text-gray-700">${{ store.cart.totalWithFreight.toFixed(2) }}</strong>
+                    </div>
+                    <hr class="border-gray-200 mb-2"/>
+                    <div class="flex justify-between items-center w-full gap-2">
+                        <button
+                            type="button"
+                            class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none"
+                            @click="store.cart.clear()"
+                        >
+                            Clear
+                        </button>
+                        <a
+                            v-if="store.cart.count > 0"
+                            :href="checkoutUrl"
+                            class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none"
+                        >
+                            Checkout
+                        </a>
+                    </div>
                 </div>
             </template>
             <template #body>

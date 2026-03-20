@@ -1,25 +1,3 @@
-// import { createApp } from 'vue';
-// // @ts-ignore
-// import HelloWorld from './components/HelloWorld.vue';
-// // @ts-ignore
-// import Cart from './components/Cart.vue';
-// // @ts-ignore
-// import AddToCart from './components/AddToCart.vue';
-// // @ts-ignore
-// import StockCategoryGroupMenu from "./components/StockCategoryGroupMenu.vue";
-// // @ts-ignore
-// import NavMenuGroup from "./components/NavMenuGroup.vue";
-// // @ts-ignore
-// // import component from './vue-shims';
-// import { NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuTrigger } from 'reka-ui';
-// import NavigationMenuListItem from './components/NavigationMenuListItem.vue';
-// import { Icon } from '@iconify/vue';
-// // @ts-ignore
-// import StockCardList from "./components/StockCardList.vue";
-// // @ts-ignore
-// import StockViewControl from "./components/StockViewControl.vue";
-
-
 import VueFeather from 'vue-feather';
 import flatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/themes/material_blue.css';
@@ -60,8 +38,6 @@ import StockCarousel from "./components/StockCarousel.vue";
 import StockListItemControl from "./components/StockListItemControl.vue";
 // @ts-ignore
 import StockCardList from "./components/StockCardList.vue";
-// @ts-ignore
-import StockCardListNew from "./components/StockCardListNew.vue";
 // @ts-ignore
 import SurfaceAreaCalculator from "./components/SurfaceAreaCalculator.vue";
 // @ts-ignore
@@ -128,7 +104,6 @@ export function registerRedglassShop(app: any) {
     app.component("stock-list-item-control", StockListItemControl)
     app.component("stock-carousel", StockCarousel)
     app.component("stock-card-list", StockCardList)
-    app.component('stock-card-list-new', StockCardListNew)
     app.component("surface-area-calculator", SurfaceAreaCalculator)
 }
 

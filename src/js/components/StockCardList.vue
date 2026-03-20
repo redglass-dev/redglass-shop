@@ -19,7 +19,7 @@
               name="query"
               class="block w-full rounded-l-md border-0 py-1.5 ps-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-0 focus:ring-1 focus:ring-gray-600 sm:text-sm sm:leading-6"
               v-model="search"
-              @keypress.enter="asyncLoad(1)"
+              @keydown.enter="asyncLoad(1)"
               placeholder="Search"
             />
             <button
@@ -75,7 +75,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
-import { Bootstrap5Pagination as Pagination } from 'laravel-vue-pagination'
+import { TailwindPagination as Pagination } from 'laravel-vue-pagination'
 import Stock from '../models/stock/Stock'
 import StockCharacteristicFilterPanel from './StockCharacteristicFilterPanel.vue'
 import StockItemControl from './StockItemControl.vue'

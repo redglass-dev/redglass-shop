@@ -9,7 +9,7 @@
                 v-if="stock !== null"
                 :show-unit-type="showUnitType"
                 :image-box-class="imageBoxClass"
-                :href="'/stocks/' + stock.plu"
+                :href="'/products/' + stock.plu"
                 class="bg-white rounded-lg shadow h-full"
                 :stock="stock"
                 @more-info="showStockModal(stock)"
@@ -168,7 +168,7 @@ onUnmounted(() => {
 const showStockModal = (item: any) => {
   modalStockItem.value = item
   isModalOpen.value = true
-  history.replaceState({ modal: true }, '', `/stocks/${item.plu}`)
+  history.replaceState({ modal: true }, '', `/products/${item.plu}`)
 }
 
 const closeModal = () => {
