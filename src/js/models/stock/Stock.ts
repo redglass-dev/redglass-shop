@@ -6,6 +6,7 @@ import uuid from "uuid-random";
 import StockCharacteristic from "./StockCharacteristic";
 // @ts-ignore
 import UnitType from "./UnitType";
+import StockImage from "./StockImage";
 
 export enum StockType {
     Stock = 1,
@@ -127,7 +128,7 @@ export interface IStock extends IDataObject {
     stockDisplayGroupGuid: string;
     orderBy: number;
     wideImage: any;
-    images: string[];
+    images: StockImage[];
     characteristics: StockCharacteristic[];
     width: number;
     height: number;
@@ -257,7 +258,7 @@ export default class Stock implements IStock {
     slug: string = '';
     pluSlug: string = '';
 
-    images: string[] = [];
+    images: StockImage[] = [];
 
     private _costEx: number = 0;
 
@@ -597,9 +598,14 @@ export default class Stock implements IStock {
         this.slug = obj && obj.slug || '';
         this.pluSlug = obj && obj.pluSlug || '';
 
-        this.images = obj && obj.images || [];
+        this.images = [];
+        if(obj && obj.images) {
+            for(let key in obj.images) {
+                this.images.push(new StockImage(obj.images[key]));
+            }
+        }
 
-        // Lets get the parent stock item.
+        // Let's get the parent stock item.
         if(obj && obj.parent) {
             this.parent = new Stock(obj.parent);
         } else {

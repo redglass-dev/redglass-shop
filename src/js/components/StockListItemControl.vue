@@ -1,22 +1,116 @@
+<script setup lang="ts">
+import { ref, onMounted, watch } from 'vue'
+import Big from 'big.js'
+import { push } from 'notivue'
+import axios from 'axios'
+import Stock from '../models/stock/Stock'
+import { useCartStore } from '../stores/CartStore'
+import { StockItem as StockItemModel } from '../Cart'
+import { FormErrors } from '../Form'
+
+const props = defineProps<{
+    stockGuid?: string
+    stock?: any
+    showStockWeight?: boolean
+    accountGuid?: string
+    showMoreInfoButton?: boolean
+    imageBoxClass?: string | string[] | Record<string, any>
+    imageBoxStyle?: string | Record<string, any>
+    btnClass?: string
+    infoBtnClass?: string
+    showBuyButtons?: boolean
+    showPrices?: boolean
+    priceOnTitleRow?: boolean
+    showUnitType?: boolean
+}>()
+
+const emit = defineEmits<{
+    (e: 'more-info'): void
+    (e: 'added-to-cart'): void
+}>()
+
+const store = useCartStore()
+const cart = store.cart
+const qty = ref(1)
+const loading = ref(false)
+const localStock = ref<Stock>(new Stock())
+const errors = ref(new FormErrors())
+
+const loadStock = (stock: any) => {
+    localStock.value = new Stock(stock)
+}
+
+onMounted(async () => {
+    if (props.stock) {
+        loadStock(props.stock)
+        return
+    }
+
+    if (props.stockGuid) {
+        loading.value = true
+        try {
+            const response = await axios.get(`/api/v1/public/stocks/${props.stockGuid}`)
+            loadStock(response.data)
+        } catch (error) {
+            console.error('Failed to load stock for list item', error)
+        } finally {
+            loading.value = false
+        }
+    }
+})
+
+watch(
+    () => props.stock,
+    (val) => {
+        if (val) loadStock(val)
+    }
+)
+
+const buy = () => {
+    if (localStock.value.options && localStock.value.options !== '') {
+        emit('more-info')
+        return
+    }
+
+    const q = Number(qty.value)
+    if (isNaN(q)) {
+        errors.value.record({ qty: ['Not a number'] })
+    } else if (q <= 0) {
+        errors.value.record({ qty: ['Purchase qty must be positive!'] })
+    } else {
+        const item = new StockItemModel()
+        item.stockGuid = localStock.value.guid
+        item.name = localStock.value.stockDescription
+        item.value = Big(localStock.value.accountInc)
+        item.weight = localStock.value.boxWeight
+        item.Qty = q
+
+        cart.addItem('stockItem', String(localStock.value.guid), item)
+        emit('added-to-cart')
+        push.success(`${q} ${localStock.value.stockDescription} added to cart`)
+    }
+}
+</script>
+
 <template>
   <div class="w-full h-full flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-    <div class="relative w-full aspect-square bg-gray-50 flex items-center justify-center cursor-pointer" @click="$emit('more-info')">
-      <template v-if="localStock.images && localStock.images.length > 0">
+    <div class="relative w-full bg-gray-50 flex items-start justify-center cursor-pointer" @click="$emit('more-info')">
+      <section v-if="localStock.images && localStock.images.length > 0">
         <img
-          class="w-full h-full object-contain"
+          class="w-full object-contain"
           :src="`/storage/stocks/${localStock.images[0].stockGuid}/images/${localStock.images[0].guid}.jpg`"
           :alt="localStock.images[0].description"
         />
         <div v-if="localStock.unAvailable" class="absolute bottom-0 left-0 bg-red-600 px-2 py-1">
           <span class="text-xs font-bold text-white uppercase">{{ localStock.unavailableLabel }}</span>
         </div>
-      </template>
-      <div v-else class="text-gray-200 text-6xl font-bold uppercase select-none">
-        {{ localStock.stockDescription?.toUpperCase()[0] || '?' }}
+      </section>
+      <div v-else class="text-gray-200 h-100 text-8xl font-bold uppercase select-none flex items-center justify-center">
+          <div>{{ localStock.stockDescription?.toUpperCase()[0] || '?' }}</div>
       </div>
     </div>
 
-    <div class="p-3 flex-grow flex flex-col">
+    <div class="p-3 grow flex flex-col">
       <div class="cursor-pointer mb-2" @click="$emit('more-info')">
         <slot name="title" :text="localStock.stockDescription">
           <h5 class="text-sm font-semibold text-gray-900 line-clamp-2">
@@ -100,100 +194,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
-import Big from 'big.js'
-import { push } from 'notivue'
-import axios from 'axios'
-import Stock from '../models/stock/Stock'
-import { useCartStore } from '../stores/CartStore'
-import { StockItem as StockItemModel } from '../Cart'
-import { FormErrors } from '../Form'
-
-const props = defineProps<{
-  stockGuid?: string
-  stock?: any
-  showStockWeight?: boolean
-  accountGuid?: string
-  showMoreInfoButton?: boolean
-  imageBoxClass?: string | string[] | Record<string, any>
-  imageBoxStyle?: string | Record<string, any>
-  btnClass?: string
-  infoBtnClass?: string
-  showBuyButtons?: boolean
-  showPrices?: boolean
-  priceOnTitleRow?: boolean
-  showUnitType?: boolean
-}>()
-
-const emit = defineEmits<{
-  (e: 'more-info'): void
-  (e: 'added-to-cart'): void
-}>()
-
-const store = useCartStore()
-const cart = store.cart
-const qty = ref(1)
-const loading = ref(false)
-const localStock = ref(new Stock())
-const errors = ref(new FormErrors())
-
-const loadStock = (stock: any) => {
-  localStock.value = new Stock(stock)
-}
-
-onMounted(async () => {
-  if (props.stock) {
-    loadStock(props.stock)
-    return
-  }
-
-  if (props.stockGuid) {
-    loading.value = true
-    try {
-      const response = await axios.get(`/api/v1/public/stocks/${props.stockGuid}`)
-      loadStock(response.data)
-    } catch (error) {
-      console.error('Failed to load stock for list item', error)
-    } finally {
-      loading.value = false
-    }
-  }
-})
-
-watch(
-  () => props.stock,
-  (val) => {
-    if (val) loadStock(val)
-  }
-)
-
-const buy = () => {
-  if (localStock.value.options && localStock.value.options !== '') {
-    emit('more-info')
-    return
-  }
-
-  const q = Number(qty.value)
-  if (isNaN(q)) {
-    errors.value.record({ qty: ['Not a number'] })
-  } else if (q <= 0) {
-    errors.value.record({ qty: ['Purchase qty must be positive!'] })
-  } else {
-    const item = new StockItemModel()
-    item.stockGuid = localStock.value.guid
-    item.name = localStock.value.stockDescription
-    item.value = Big(localStock.value.accountInc)
-    item.weight = localStock.value.boxWeight
-    item.Qty = q
-
-    cart.addItem('stockItem', String(localStock.value.guid), item)
-    emit('added-to-cart')
-    push.success(`${q} ${localStock.value.stockDescription} added to cart`)
-  }
-}
-</script>
 
 <style scoped>
 .rounded-left-0 {

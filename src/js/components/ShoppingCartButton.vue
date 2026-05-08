@@ -73,14 +73,18 @@ const store = useCartStore()
 const showModal = ref(false)
 const theme = ref<any>(lightTheme)
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     hidePrices?: boolean
     btnClass?: string
     btnStyle?: string
     id?: string
     checkoutUrl?: string
     showCouponInput?: boolean
-}>()
+}>(), {
+    checkoutUrl: '/checkout',
+    showCouponInput: false,
+    hidePrices: false,
+})
 
 const togglePopover = () => {
     showModal.value = !showModal.value

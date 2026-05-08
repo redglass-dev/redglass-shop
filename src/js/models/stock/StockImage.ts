@@ -27,11 +27,11 @@ export default class StockImage implements IStockImage{
     lastUpdate: string = '';
     imageType: ImageType = ImageType.Normal;
 
-    constructor(obj? : IStockImage) {
+    constructor(obj? : Partial<StockImage>) {
         this.update(obj);
     }
 
-    update(obj? : IStockImage) {
+    update(obj? : Partial<StockImage>) {
         this.guid = obj && obj.guid || uuid();
         this.stockGuid = obj && obj.stockGuid || '';
         this.uriLink = obj && obj.uriLink || '';

@@ -10,3 +10,11 @@
   --container-padding: 20px;
   --nv-root-top: calc(var(--header-height) + var(--container-padding));
 }
+
+.redglass-input {
+    @apply bg-white rounded-sm border border-gray-200 focus:outline-none focus:ring-red-300 focus:border-red-300  sm:text-sm p-2;
+}
+
+.redglass-input-label {
+    @apply pl-1 block text-xs font-medium text-gray-400;
+}
