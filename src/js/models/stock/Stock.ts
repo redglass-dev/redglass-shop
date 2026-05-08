@@ -12,7 +12,8 @@ export enum StockType {
     Stock = 1,
     Child = 2,
     Recipe = 4,
-    MenuItem = 8
+    MenuItem = 8,
+    Group = 16
 }
 
 export enum StockCoverageType {
@@ -21,125 +22,7 @@ export enum StockCoverageType {
     widthCoverage = 4
 }
 
-export interface IStock extends IDataObject {
-    type: StockType;
-    plu: string;
-    stockDescription: string;
-    stockGroupGuid: string;
-    manufacturerGuid: string;
-    unitTypeGuid: string;
-    purchaseTaxGuid: string;
-    taxGuid: string;
-    parentGuid: string;
-    parentQtyModifier: number;
-    defaultLocationGuid: string;
-    defaultStockSupplierGuid: string;
-    defaultSupplierGuid: string;
-    defaultSupplierPartNo: number;
-    options: string;
-    orderText: string;
-    recommendations: string;
-    stockCodeDescription: string;
-    notes: string;
-    manufacturerDescription: string;
-    webDescription: string;
-    countDown: boolean;
-    countDownStart: number;
-    countDownWarning: number;
-    loyaltyPerItem: number;
-    loyaltyCost: number;
-    boxesPerPallet: number;
-    qtyInBox: number;
-    boxWeight: number;
-    maxDiscount: number;
-    surfaceArea: number;
-    lengthCoverage: number;
-    widthCoverage: number;
-    freightItemGuid: string;
-    deliveryTime: number;
-    minLevel: number;
-    reOrderLevel: number;
-    lastPurchaseEx: number;
-    lastPurchaseTax: number;
-    costEx: number;
-    costTax: number;
-    retailEx: number;
-    retailTax: number;
-    wholeSaleEx: number;
-    wholeSaleTax: number;
-    p1Ex: number;
-    p1Tax: number;
-    p2Ex: number;
-    p2Tax: number;
-    p3Ex: number;
-    p3Tax: number;
-    p4Ex: number;
-    p4Tax: number;
-    p5Ex: number;
-    p5Tax: number;
-    p6Ex: number;
-    p6Tax: number;
-    p7Ex: number;
-    p7Tax: number;
-    p8Ex: number;
-    p8Tax: number;
-    p9Ex: number;
-    p9Tax: number;
-    p10Ex: number;
-    p10Tax: number;
-    saleEx: number;
-    saleTax: number;
-    specialEx: number;
-    specialTax: number;
-    retailFunc: string;
-    wholesaleFunc: string;
-    p1Func: string;
-    p2Func: string;
-    p3Func: string;
-    p4Func: string;
-    p5Func: string;
-    p6Func: string;
-    p7Func: string;
-    p8Func: string;
-    p9Func: string;
-    p10Func: string;
-    saleFunc: string;
-    specialFunc: string;
-    onSale: boolean;
-    onSpecial: boolean;
-    nonStockItem: boolean;
-    unAvailable: boolean;
-    hasImages: boolean;
-    hideFromWeb: boolean;
-    discountSyncCounter: number;
-    defaultCoverageType: StockCoverageType;
-    accountEx: number;
-    accountTax: number;
-    parent: Stock|null;
-    recipeGuid: string;
-    glTaxSalesGuid: string;
-    glTaxPurchasesGuid: string;
-    glCogsGuid: string;
-    glStockGuid: string;
-    glAdjustGuid: string;
-    glSurchargeGuid: string;
-    glDiscountGuid: string;
-    glSalesGuid: string;
-    stockDisplayGroupGuid: string;
-    orderBy: number;
-    wideImage: any;
-    images: StockImage[];
-    characteristics: StockCharacteristic[];
-    width: number;
-    height: number;
-    length: number;
-    unavailableLabel: string;
-    unitType: UnitType|null;
-    slug: string;
-    pluSlug: string;
-}
-
-export default class Stock implements IStock {
+export default class Stock {
     guid: string = '';
     manufacturerGuid: string = '';
     plu: string = '';
@@ -257,6 +140,7 @@ export default class Stock implements IStock {
     glSalesGuid: string = '';
     slug: string = '';
     pluSlug: string = '';
+    primaryStockGuid: string = '';
 
     images: StockImage[] = [];
 
@@ -340,7 +224,7 @@ export default class Stock implements IStock {
         return Number(Big(this.lastPurchaseEx).plus(this.lastPurchaseTax).round(2, 2));
     }
 
-    set costEx(value) {
+    set costEx(value:number) {
         if(this.type === StockType.Child && this.parent !== null) {
             return;
         }
@@ -369,7 +253,7 @@ export default class Stock implements IStock {
         return 0.00;
     }
 
-    constructor(obj?: IStock) {
+    constructor(obj?: Partial<Stock>) {
         this.update(obj);
     }
 
@@ -484,7 +368,7 @@ export default class Stock implements IStock {
         }
     }
 
-    update(obj? : IStock) {
+    update(obj? : Partial<Stock>) {
         this.guid = obj && obj.guid || uuid();
         this.manufacturerGuid = obj && obj.manufacturerGuid || '';
         this.plu = obj && obj.plu || '';
@@ -597,6 +481,7 @@ export default class Stock implements IStock {
         this.unavailableLabel = obj && obj.unavailableLabel || "Out Of Stock";
         this.slug = obj && obj.slug || '';
         this.pluSlug = obj && obj.pluSlug || '';
+        this.primaryStockGuid = obj && obj.primaryStockGuid || '';
 
         this.images = [];
         if(obj && obj.images) {
@@ -627,7 +512,7 @@ export default class Stock implements IStock {
     }
 
     // toJSON is automatically used by JSON.stringify
-    toJSON(): IStock {
+    toJSON(): Partial<Stock> {
         // copy all fields from `this` to an empty object and return in
         let tmp = Object.assign({}, this, {
             // convert fields that need converting

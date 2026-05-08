@@ -3,7 +3,7 @@ import { ref, onMounted, watch } from 'vue'
 import Big from 'big.js'
 import { push } from 'notivue'
 import axios from 'axios'
-import Stock from '../models/stock/Stock'
+import Stock, {StockType} from '../models/stock/Stock'
 import { useCartStore } from '../stores/CartStore'
 import { StockItem as StockItemModel } from '../Cart'
 import { FormErrors } from '../Form'
@@ -34,10 +34,23 @@ const cart = store.cart
 const qty = ref(1)
 const loading = ref(false)
 const localStock = ref<Stock>(new Stock())
+const primaryStock = ref<Stock>(new Stock())
 const errors = ref(new FormErrors())
 
 const loadStock = (stock: any) => {
     localStock.value = new Stock(stock)
+    primaryStock.value = localStock.value
+
+    if(localStock.value.type == StockType.Group)
+    {
+        axios.get(`/api/v1/public/stocks/${localStock.value.primaryStockGuid}`)
+            .then(response => {
+                primaryStock.value = new Stock(response.data)
+            })
+            .catch(error => {
+                console.error('Failed to load stock for list item', error)
+            })
+    }
 }
 
 onMounted(async () => {
@@ -67,7 +80,7 @@ watch(
 )
 
 const buy = () => {
-    if (localStock.value.options && localStock.value.options !== '') {
+    if (primaryStock.value.options && primaryStock.value.options !== '') {
         emit('more-info')
         return
     }
@@ -79,15 +92,15 @@ const buy = () => {
         errors.value.record({ qty: ['Purchase qty must be positive!'] })
     } else {
         const item = new StockItemModel()
-        item.stockGuid = localStock.value.guid
-        item.name = localStock.value.stockDescription
-        item.value = Big(localStock.value.accountInc)
-        item.weight = localStock.value.boxWeight
+        item.stockGuid = primaryStock.value.guid
+        item.name = primaryStock.value.stockDescription
+        item.value = Big(primaryStock.value.accountInc)
+        item.weight = primaryStock.value.boxWeight
         item.Qty = q
 
-        cart.addItem('stockItem', String(localStock.value.guid), item)
+        cart.addItem('stockItem', String(primaryStock.value.guid), item)
         emit('added-to-cart')
-        push.success(`${q} ${localStock.value.stockDescription} added to cart`)
+        push.success(`${q} ${primaryStock.value.stockDescription} added to cart`)
     }
 }
 </script>
@@ -95,14 +108,14 @@ const buy = () => {
 <template>
   <div class="w-full h-full flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
     <div class="relative w-full bg-gray-50 flex items-start justify-center cursor-pointer" @click="$emit('more-info')">
-      <section v-if="localStock.images && localStock.images.length > 0">
+      <section v-if="primaryStock.images && primaryStock.images.length > 0">
         <img
           class="w-full object-contain"
-          :src="`/storage/stocks/${localStock.images[0].stockGuid}/images/${localStock.images[0].guid}.jpg`"
-          :alt="localStock.images[0].description"
+          :src="`/storage/stocks/${primaryStock.images[0].stockGuid}/images/${primaryStock.images[0].guid}.jpg`"
+          :alt="primaryStock.images[0].description"
         />
-        <div v-if="localStock.unAvailable" class="absolute bottom-0 left-0 bg-red-600 px-2 py-1">
-          <span class="text-xs font-bold text-white uppercase">{{ localStock.unavailableLabel }}</span>
+        <div v-if="primaryStock.unAvailable" class="absolute bottom-0 left-0 bg-red-600 px-2 py-1">
+          <span class="text-xs font-bold text-white uppercase">{{ primaryStock.unavailableLabel }}</span>
         </div>
       </section>
       <div v-else class="text-gray-200 h-100 text-8xl font-bold uppercase select-none flex items-center justify-center">
@@ -120,36 +133,36 @@ const buy = () => {
       </div>
 
       <div v-if="showPrices" class="mt-auto mb-3">
-        <slot name="price" :stock="localStock" :has-surface-area="localStock.surfaceArea > 0">
+        <slot name="price" :stock="primaryStock" :has-surface-area="primaryStock.surfaceArea > 0">
           <div class="text-right">
-            <div v-if="localStock.surfaceArea > 0">
-              <div :class="{ 'line-through opacity-50': localStock.onSale && localStock.accountInc >= localStock.saleInc }">
+            <div v-if="primaryStock.surfaceArea > 0">
+              <div :class="{ 'line-through opacity-50': primaryStock.onSale && primaryStock.accountInc >= primaryStock.saleInc }">
                 <span class="text-lg font-bold text-gray-900">
-                  ${{ ((localStock.onSale && localStock.accountInc == localStock.saleInc) ? (localStock.retailInc / localStock.defaultCoverage) : (localStock.accountInc / localStock.defaultCoverage)).toFixed(2) }}
+                  ${{ ((primaryStock.onSale && primaryStock.accountInc == primaryStock.saleInc) ? (primaryStock.retailInc / primaryStock.defaultCoverage) : (primaryStock.accountInc / primaryStock.defaultCoverage)).toFixed(2) }}
                   <span class="text-[0.65rem] align-baseline">m<sup>2</sup></span>
                 </span>
               </div>
               <div class="text-[0.65rem] text-gray-500">
-                <span v-if="localStock.boxesPerPallet > 0">
-                  ${{ ((localStock.onSale && localStock.accountInc == localStock.saleInc) ? (localStock.retailInc * localStock.boxesPerPallet) : (localStock.accountInc * localStock.boxesPerPallet)).toFixed(2) }}
-                  {{ localStock.unitType?.palletName || 'Pallets' }}
+                <span v-if="primaryStock.boxesPerPallet > 0">
+                  ${{ ((primaryStock.onSale && primaryStock.accountInc == primaryStock.saleInc) ? (primaryStock.retailInc * primaryStock.boxesPerPallet) : (primaryStock.accountInc * primaryStock.boxesPerPallet)).toFixed(2) }}
+                  {{ primaryStock.unitType?.palletName || 'Pallets' }}
                 </span>
                 <br />
                 <span>
-                  ${{ ((localStock.onSale && localStock.accountInc == localStock.saleInc) ? localStock.retailInc : localStock.accountInc).toFixed(2) }}
-                  <span v-if="showUnitType">{{ localStock.unitType?.name || 'Each' }}</span>
+                  ${{ ((primaryStock.onSale && primaryStock.accountInc == primaryStock.saleInc) ? primaryStock.retailInc : primaryStock.accountInc).toFixed(2) }}
+                  <span v-if="showUnitType">{{ primaryStock.unitType?.name || 'Each' }}</span>
                 </span>
               </div>
             </div>
             <div v-else>
-              <div :class="{ 'line-through opacity-50': localStock.onSale && localStock.accountInc >= localStock.saleInc }">
+              <div :class="{ 'line-through opacity-50': primaryStock.onSale && primaryStock.accountInc >= primaryStock.saleInc }">
                 <span class="text-lg font-bold text-gray-900">
-                  ${{ ((localStock.onSale && localStock.accountInc == localStock.saleInc) ? localStock.retailInc : localStock.accountInc).toFixed(2) }}
-                  <span v-if="showUnitType" class="text-[0.65rem] align-baseline">{{ localStock.unitType?.name || 'Each' }}</span>
+                  ${{ ((primaryStock.onSale && primaryStock.accountInc == primaryStock.saleInc) ? primaryStock.retailInc : primaryStock.accountInc).toFixed(2) }}
+                  <span v-if="showUnitType" class="text-[0.65rem] align-baseline">{{ primaryStock.unitType?.name || 'Each' }}</span>
                 </span>
               </div>
-              <div v-if="localStock.onSale && localStock.accountInc >= localStock.saleInc" class="text-lg font-bold text-red-600">
-                ${{ localStock.saleInc.toFixed(2) }}
+              <div v-if="primaryStock.onSale && primaryStock.accountInc >= primaryStock.saleInc" class="text-lg font-bold text-red-600">
+                ${{ primaryStock.saleInc.toFixed(2) }}
               </div>
             </div>
           </div>
@@ -167,12 +180,12 @@ const buy = () => {
         </button>
 
         <div v-if="showBuyButtons">
-          <div v-if="localStock.unAvailable" class="w-full border border-red-200 bg-red-50 p-2 text-center text-red-700 text-xs font-bold uppercase rounded-md">
-            {{ localStock.unavailableLabel }}
+          <div v-if="primaryStock.unAvailable" class="w-full border border-red-200 bg-red-50 p-2 text-center text-red-700 text-xs font-bold uppercase rounded-md">
+            {{ primaryStock.unavailableLabel }}
           </div>
           <div v-else class="flex rounded-md shadow-sm">
             <span v-if="showUnitType" class="inline-flex items-center px-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-[0.65rem]">
-              {{ localStock.unitType?.name || 'Qty' }}
+              {{ primaryStock.unitType?.name || 'Qty' }}
             </span>
             <input
               type="text"
