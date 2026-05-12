@@ -1,7 +1,7 @@
 <template>
     <div class="relative inline-block">
         <button
-            class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-white"
+            class="inline-flex items-center text-sm font-medium rounded-md outline-none focus:outline-none focus:ring-2 focus:ring-offset-2 bg-white"
             :class="btnClass"
             :style="btnStyle"
             :id="id"
@@ -11,7 +11,7 @@
             <slot name="item-text">Items&nbsp;</slot>
             {{ store.cart.count }}
           </span>
-                <span v-else>
+            <span v-else class="flex flex-row">
             <slot name="total-text">Total&nbsp;$</slot>
             {{ store.cart.totalWithFreight.toFixed(2) }}
           </span>
