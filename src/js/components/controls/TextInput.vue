@@ -15,7 +15,7 @@ const { error = undefined, label = '', type = 'text' } = defineProps<{ error?: s
         <textarea
             v-if="type === 'multiline'"
             class="block w-full redglass-input"
-            :class="{ 'border-red-500': error !== undefined}"
+            :class="{ 'border-red-500': (error !== undefined && error !== '')}"
             v-model="value"
             v-bind="$attrs"
             required
@@ -25,7 +25,7 @@ const { error = undefined, label = '', type = 'text' } = defineProps<{ error?: s
             v-else
             type="text"
             class="block w-full redglass-input"
-            :class="{ 'border-red-500': error !== undefined}"
+            :class="{ 'border-red-500': (error !== undefined && error !== '')}"
             v-model="value"
             v-bind="$attrs"
             required

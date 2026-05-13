@@ -106,8 +106,8 @@ const buy = () => {
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-    <div class="relative w-full bg-gray-50 flex items-start justify-center cursor-pointer" @click="$emit('more-info')">
+  <div class="w-full h-full flex flex-col overflow-hidden redglass-card">
+    <div class="relative w-full flex items-start justify-center cursor-pointer" @click="$emit('more-info')">
       <section v-if="primaryStock.images && primaryStock.images.length > 0">
         <img
           class="w-full object-contain"
@@ -173,7 +173,7 @@ const buy = () => {
         <button
           v-if="showMoreInfoButton"
           type="button"
-          class="w-full inline-flex justify-center items-center px-3 py-2 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
+          class="redglass-btn-info"
           @click="$emit('more-info')"
         >
           More Info
@@ -189,14 +189,14 @@ const buy = () => {
             </span>
             <input
               type="text"
-              class="flex-1 block w-full border-gray-300 text-left text-sm px-3 ring-1 ring-inset ring-gray-300 outline-0 focus:ring-gray-600 focus:border-gray-600"
+              class="redglass-input-qty"
               :class="showUnitType ? '' : 'rounded-l-md'"
               v-model="qty"
               pattern="[0-9]*"
             />
             <button
               type="button"
-              class="inline-flex items-center px-3 py-2 border border-l-0 border-transparent text-xs font-medium rounded-r-md text-white bg-green-600 hover:bg-green-700 focus:outline-none"
+              class="redglass-btn-buy"
               @click="buy"
             >
               Buy

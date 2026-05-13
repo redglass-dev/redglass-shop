@@ -78,6 +78,7 @@ const loadStock = (stockData: any) => {
     {
         axios.get(`/api/v1/public/stocks/${localStock.value.primaryStockGuid}`)
             .then(response => {
+                console.log("Current stock item loaded", response.data)
                 loadCurrentStock(new Stock(response.data))
             })
             .catch(error => {
@@ -176,7 +177,7 @@ defineExpose({
 </script>
 
 <template>
-  <div :class="['flex flex-col lg:flex-row border-0 overflow-hidden', rowClass]" :style="rowStyle">
+  <div :class="['flex flex-col lg:flex-row overflow-hidden', rowClass]" :style="rowStyle">
     <div v-if="hasImages" class="w-full lg:w-1/2 p-0 lg:border-r border-gray-200" :style="`min-width: ${imageMinWidth}`">
       <slot name="carousel-header"></slot>
 
@@ -200,8 +201,8 @@ defineExpose({
           <button
             v-for="(item, index) in currentStock.images"
             :key="index"
-            class="relative w-16 h-16 rounded overflow-hidden border-2 transition-all"
-            :class="activeImageIndex === index ? 'border-indigo-600 ring-2 ring-indigo-600/20' : 'border-transparent hover:border-gray-300'"
+            class="relative w-16 h-16 rounded overflow-hidden transition-all ring-0 outline-0 border-0"
+            :class="activeImageIndex === index ? 'border-(--ring-color) ring-1 ring-(--ring-color)/20' : 'border-transparent hover:border-gray-300'"
             @click="activeImageIndex = index"
           >
             <img class="w-full h-full object-cover"
@@ -215,21 +216,31 @@ defineExpose({
 
     <div v-else class="w-full lg:w-1/2 p-0 lg:border-r border-gray-200 flex flex-col">
       <slot name="carousel-header"></slot>
-      <div class="flex-grow flex items-center justify-center min-h-[300px]">
+      <div class="grow flex items-center justify-center min-h-[300px]">
         <h2 class="text-gray-200 text-[35vh] font-bold uppercase select-none leading-none">
           {{ currentStock.stockDescription?.toUpperCase()[0] || '?' }}
         </h2>
       </div>
     </div>
 
-    <div class="flex-grow flex flex-col p-4 md:p-6 lg:p-8">
-      <div class="flex-grow">
+    <div class="grow flex flex-col p-4 md:p-6 lg:p-8">
+      <div class="grow">
         <slot name="card-header"></slot>
         <slot name="title" :text="currentStock.stockDescription">
           <h1 class="text-2xl font-bold text-gray-900 mb-2">
             {{ currentStock.stockDescription }}
           </h1>
         </slot>
+          <Select v-if="localStock.type == StockType.Group"
+                  v-model="currentStock.guid">
+              <SelectTrigger class="mb-4">
+                  <SelectValue v-model="currentStock.guid" />
+              </SelectTrigger>
+
+              <SelectContent class="border-gray-300 bg-white redglass-input">
+                  <SelectItem v-for="item in groupingStocks" :key="item.guid" :value="item.guid" @select="loadCurrentStock(item)">{{ item.stockDescription }}</SelectItem>
+              </SelectContent>
+          </Select>
 
         <div v-if="showPrices" class="mb-6">
           <slot name="price" :stock="currentStock" :has-surface-area="hasSurfaceArea">
@@ -269,19 +280,6 @@ defineExpose({
         </div>
 
         <div class="prose prose-sm max-w-none text-gray-600 mb-8" v-html="currentStock.webDescription"></div>
-<!--          <div class="w-full bg-green-400">-->
-          <Select v-if="localStock.type == StockType.Group">
-              <SelectTrigger>
-                  <SelectValue v-model="currentStock.guid" />
-<!--                  <div class="w-full text-left">{{ currentStock.stockDescription }}</div>-->
-              </SelectTrigger>
-
-              <SelectContent class="border-gray-300">
-                  <SelectItem v-for="item in groupingStocks" :key="item.guid" :value="item.guid" @select="loadCurrentStock(item)">{{ item.stockDescription }}</SelectItem>
-              </SelectContent>
-          </Select>
-<!--          </div>-->
-
         <!-- Options Section -->
         <div v-if="options.length > 0" class="space-y-4 border-t border-gray-100 pt-6 mb-8">
           <stock-option-control
@@ -302,18 +300,18 @@ defineExpose({
       <!-- Buy Panel -->
       <div v-if="showBuyButtons && !currentStock.unAvailable" class="sticky bottom-0 border-t border-gray-100 pt-4 mt-auto">
         <div class="flex items-stretch gap-0">
-          <div v-if="showUnitType" class="inline-flex items-center rounded-l-md px-3 border border-r-0 border-gray-300 text-gray-500 text-sm">
+          <div v-if="showUnitType" class="redglass-label-unit-type">
             {{ currentStock.unitType?.name || 'Qty' }}
           </div>
           <input
             type="text"
-            class="flex-1 block w-full border-gray-300 text-left text-sm px-3 ring-1 ring-inset ring-gray-300 outline-0 focus:ring-gray-600 focus:border-gray-600"
+            class="redglass-input-qty"
             :class="showUnitType ? '' : 'rounded-l-md'"
             v-model="qty"
             pattern="[0-9]*"
           />
           <button
-            class="inline-flex items-center px-8 py-3 border border-transparent text-lg font-bold rounded-r-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors shadow-sm"
+            class="redglass-btn-buy"
             @click="buy"
           >
             Buy Now

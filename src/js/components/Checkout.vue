@@ -438,7 +438,7 @@ onMounted(() => {
 
               <div class="sm:col-span-6">
                   <TextInput label="Email Address" type="email" v-model="form.Email" :error="form.errors.get('Email')" @change="clearErrors('Email')">
-                      <a v-if="!customer" href="/login" class="text-xs font-semibold text-indigo-600 hover:text-indigo-500">
+                      <a v-if="!customer" href="/login" class="text-xs font-semibold text-(--primary-color) hover:text-(--primary-color)/75">
                           Already have an account? Login
                       </a>
                   </TextInput>
