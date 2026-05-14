@@ -21,19 +21,18 @@
     "devDependencies": {
         "@iconify/vue": "^5.0.0",
         "@pinia/testing": "^0.1.0",
-        "@popperjs/core": "^2.11.8",
         "@tailwindcss/vite": "^4.2.2",
         "@types/big.js": "^6.2.2",
         "@vue/language-server": "^3.2.5",
         "@vue/test-utils": "^2.4.6",
         "jsdom": "^26.0.0",
         "tailwindcss": "^4.0.0",
-        "typescript": "^5.0.0",
         "vitest": "^3.0.0",
         "vue": "^3.4.0",
         "vue-tsc": "^3.0.0"
     },
     "dependencies": {
+        "@popperjs/core": "^2.11.8",
         "autoprefixer": "^10.4.20",
         "axios": "^1.11.0",
         "clsx": "^2.1.1",
@@ -52,6 +51,7 @@
         "vue-numeric": "^2.3.0",
         "vuedraggable": "^4.1.0",
         "pinia": "^3.0.4",
-        "big.js": "^6.2.2"
+        "big.js": "^6.2.2",
+        "typescript": "^5.0.0"
     }
 }
