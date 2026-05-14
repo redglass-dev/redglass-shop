@@ -32,6 +32,7 @@
         "vue-tsc": "^3.0.0"
     },
     "dependencies": {
+        "@vitejs/plugin-vue": "^6.0.0",
         "@popperjs/core": "^2.11.8",
         "autoprefixer": "^10.4.20",
         "axios": "^1.11.0",
