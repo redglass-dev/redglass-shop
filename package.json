@@ -10,7 +10,7 @@
     ],
     "license": "MIT",
     "type": "module",
-    "private": true,
+    "private": false,
     "publishConfig": {
         "@redglass-dev:registry": "https://npm.pkg.github.com"
     },
