@@ -1,7 +1,7 @@
 {
     "name": "@redglass-dev/redglass-shop",
     "description": "The frontend assets for the webshop Vue package.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "main": "src/js/app.ts",
     "files": [
         "src",
@@ -20,17 +20,16 @@
     },
     "devDependencies": {
         "@iconify/vue": "^5.0.0",
+        "@pinia/testing": "^0.1.0",
         "@popperjs/core": "^2.11.8",
         "@tailwindcss/vite": "^4.2.2",
         "@types/big.js": "^6.2.2",
         "@vitejs/plugin-vue": "^6.0.0",
         "@vue/language-server": "^3.2.5",
         "@vue/test-utils": "^2.4.6",
-        "@pinia/testing": "^0.1.0",
+        "big.js": "^6.2.2",
         "jsdom": "^26.0.0",
         "laravel-vue-pagination": "^4.1.3",
-        "big.js": "^6.2.2",
-        "pinia": "^3.0.4",
         "tailwindcss": "^4.0.0",
         "typescript": "^5.0.0",
         "vitest": "^3.0.0",
@@ -40,6 +39,7 @@
     "dependencies": {
         "autoprefixer": "^10.4.20",
         "axios": "^1.11.0",
+        "clsx": "^2.1.1",
         "concurrently": "^9.0.1",
         "date-fns": "^4.1.0",
         "expr-eval-fork": "^3.0.1",
@@ -47,13 +47,13 @@
         "lucide-vue-next": "^1.0.0",
         "notivue": "^2.4.5",
         "reka-ui": "^2.8.2",
-        "clsx": "^2.1.1",
         "tailwind-merge": "^3.2.0",
         "uuid-random": "^1.0.6",
         "vue-feather": "^2.0.0",
         "vue-flatpickr-component": "^11.0.5",
         "vue-multiselect": "^3.1.0",
         "vue-numeric": "^2.3.0",
-        "vuedraggable": "^4.1.0"
+        "vuedraggable": "^4.1.0",
+        "pinia": "^3.0.4"
     }
 }
