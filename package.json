@@ -11,6 +11,9 @@
     "license": "MIT",
     "type": "module",
     "private": true,
+    "publishConfig": {
+        "@redglass-dev:registry": "https://npm.pkg.github.com"
+    },
     "devDependencies": {
         "@iconify/vue": "^5.0.0",
         "@popperjs/core": "^2.11.8",
