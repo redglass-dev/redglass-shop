@@ -16,6 +16,7 @@ interface IFreightProvider extends IDataObject {
     pickupPhone: string;
     pickupCountry: string;
     parentProviderGuid: string;
+    showOnWeb: boolean;
 }
 
 export default class FreightProvider implements IFreightProvider {
@@ -34,6 +35,7 @@ export default class FreightProvider implements IFreightProvider {
     pickupPhone: string = '';
     pickupCountry: string = '';
     parentProviderGuid: string = '';
+    showOnWeb: boolean = false;
 
     constructor(obj? : IFreightProvider) {
         this.update(obj);
@@ -70,5 +72,6 @@ export default class FreightProvider implements IFreightProvider {
         this.pickupPhone = obj && obj.pickupPhone || '';
         this.pickupCountry = obj && obj.pickupCountry || '';
         this.parentProviderGuid = obj && obj.parentProviderGuid || '';
+        this.showOnWeb = obj && obj.showOnWeb || false;
     }
 }

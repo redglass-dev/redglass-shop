@@ -1,7 +1,7 @@
 <template>
     <div class="relative inline-block">
         <button
-            class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-white"
+            class="inline-flex items-center text-sm font-medium rounded-md outline-none focus:outline-none focus:ring-2 focus:ring-offset-2 bg-white"
             :class="btnClass"
             :style="btnStyle"
             :id="id"
@@ -11,7 +11,7 @@
             <slot name="item-text">Items&nbsp;</slot>
             {{ store.cart.count }}
           </span>
-                <span v-else>
+            <span v-else class="flex flex-row">
             <slot name="total-text">Total&nbsp;$</slot>
             {{ store.cart.totalWithFreight.toFixed(2) }}
           </span>
@@ -30,7 +30,8 @@
                     <div class="flex justify-between items-center w-full gap-2">
                         <button
                             type="button"
-                            class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none"
+                            class="inline-flex items-center px-2 py-1"
+                            :class="clearBtnClass"
                             @click="store.cart.clear()"
                         >
                             Clear
@@ -38,7 +39,8 @@
                         <a
                             v-if="store.cart.count > 0"
                             :href="checkoutUrl"
-                            class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none"
+                            class="inline-flex items-center px-2 py-1"
+                            :class="checkoutBtnClass"
                         >
                             Checkout
                         </a>
@@ -73,14 +75,22 @@ const store = useCartStore()
 const showModal = ref(false)
 const theme = ref<any>(lightTheme)
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     hidePrices?: boolean
     btnClass?: string
     btnStyle?: string
     id?: string
     checkoutUrl?: string
     showCouponInput?: boolean
-}>()
+    clearBtnClass?: string|[]
+    checkoutBtnClass?: string|[]
+}>(), {
+    checkoutUrl: '/checkout',
+    showCouponInput: false,
+    hidePrices: false,
+    clearBtnClass: "redglass-btn-clear",
+    checkoutBtnClass: "redglass-btn-checkout",
+})
 
 const togglePopover = () => {
     showModal.value = !showModal.value

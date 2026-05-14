@@ -5,6 +5,7 @@ import Customer from '../models/contacts/Customer'
 import { useCartStore } from '../stores/CartStore'
 import axios from 'axios'
 import AddressInput from './controls/AddressInput.vue'
+import FreightProvider from "../models/pos/FreightProvider";
 
 const props = defineProps<{
   allowEdit?: boolean
@@ -223,7 +224,7 @@ const hasSlot = (name: string) => !!slots[name]
                 ></address-input>
               </div>
               <div class="space-y-2">
-                <div v-for="fp in cart.freightProviders.filter((p) => p.showOnWeb)" :key="fp.guid" class="flex items-center">
+                <div v-for="fp in cart.freightProviders.filter((p:FreightProvider) => p.showOnWeb)" :key="fp.guid" class="flex items-center">
                   <input
                     type="radio"
                     :name="'providerRadio_' + controlId"

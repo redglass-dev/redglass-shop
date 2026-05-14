@@ -1,3 +1,88 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import Big from 'big.js'
+import { push } from 'notivue'
+import { useCartStore } from '../stores/CartStore'
+import { StockItem as StockItemModel } from '../Cart'
+import { FormErrors } from '../Form'
+
+const props = defineProps<{
+    stockGuid?: string
+    price?: string | number
+    stockName?: string
+    stockDescription?: string
+    stockPlu?: string
+    weight?: number | string
+    descriptionLength?: number
+    minHeight?: number
+    thumbnail?: string
+    showPrice?: boolean
+    showBuyButton?: boolean
+    showPlu?: boolean
+    allowPopup?: boolean
+    images?: string[]
+    headerClass?: string
+    headerStyle?: string
+    headerImageHeight?: number
+    titleClass?: string
+    titleStyle?: string
+    titleInBody?: boolean
+    rowStyle?: string
+    rowClass?: string
+    boxStyle?: string
+    boxClass?: string
+    imageClass?: string
+    imageBoxStyle?: string
+    imageBoxClass?: string
+    imageCol?: number
+}>()
+
+const store = useCartStore()
+const cart = store.cart
+const qty = ref(1)
+const loading = ref(false)
+const isModalOpen = ref(false)
+const errors = ref(new FormErrors())
+
+const shortDescription = computed(() => props.stockDescription || '')
+const hasThumbnail = computed(() => props.thumbnail !== '')
+const total = computed(() => {
+    const p = Number(props.price) || 0
+    const q = Number(qty.value) || 0
+    return new Big(p).mul(q).toFixed(2)
+})
+
+const showModal = () => {
+    if (props.allowPopup !== false) {
+        isModalOpen.value = true
+    }
+}
+
+const closeModal = () => {
+    isModalOpen.value = false
+}
+
+const buy = () => {
+    const q = Number(qty.value)
+    if (isNaN(q)) {
+        errors.value.record({ qty: ['Not a number'] })
+    } else if (q <= 0) {
+        errors.value.record({ qty: ['Purchase qty must be positive!'] })
+    } else {
+        const item = new StockItemModel()
+        item.stockGuid = props.stockGuid || ''
+        item.name = props.stockName || ''
+        item.value = Big(props.price || 0)
+        item.weight = Number(props.weight) || 0
+        item.Qty = q
+
+        cart.addItem('stockItem', String(item.stockGuid), item)
+        push.success(`${q} ${props.stockName} added to cart`)
+        closeModal()
+    }
+}
+</script>
+
 <template>
   <div class="w-full">
     <div :class="['flex flex-wrap md:flex-nowrap items-center border rounded-lg bg-white shadow-sm overflow-hidden mb-2', rowClass]" :style="rowStyle">
@@ -130,92 +215,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue'
-import Big from 'big.js'
-import { push } from 'notivue'
-import { useCartStore } from '../stores/CartStore'
-import { StockItem as StockItemModel } from '../Cart'
-import { FormErrors } from '../Form'
-
-const props = defineProps<{
-  stockGuid?: string
-  price?: string | number
-  stockName?: string
-  stockDescription?: string
-  stockPlu?: string
-  weight?: number | string
-  descriptionLength?: number
-  minHeight?: number
-  thumbnail?: string
-  showPrice?: boolean
-  showBuyButton?: boolean
-  showPlu?: boolean
-  allowPopup?: boolean
-  images?: string[]
-  headerClass?: string
-  headerStyle?: string
-  headerImageHeight?: number
-  titleClass?: string
-  titleStyle?: string
-  titleInBody?: boolean
-  rowStyle?: string
-  rowClass?: string
-  boxStyle?: string
-  boxClass?: string
-  imageClass?: string
-  imageBoxStyle?: string
-  imageBoxClass?: string
-  imageCol?: number
-}>()
-
-const store = useCartStore()
-const cart = store.cart
-const qty = ref(1)
-const loading = ref(false)
-const isModalOpen = ref(false)
-const errors = ref(new FormErrors())
-
-const shortDescription = computed(() => props.stockDescription || '')
-const hasThumbnail = computed(() => props.thumbnail !== '')
-const total = computed(() => {
-  const p = Number(props.price) || 0
-  const q = Number(qty.value) || 0
-  return new Big(p).mul(q).toFixed(2)
-})
-
-const showModal = () => {
-  if (props.allowPopup !== false) {
-    isModalOpen.value = true
-  }
-}
-
-const closeModal = () => {
-  isModalOpen.value = false
-}
-
-const buy = () => {
-  const q = Number(qty.value)
-  if (isNaN(q)) {
-    errors.value.record({ qty: ['Not a number'] })
-  } else if (q <= 0) {
-    errors.value.record({ qty: ['Purchase qty must be positive!'] })
-  } else {
-    const item = new StockItemModel()
-    item.stockGuid = props.stockGuid || ''
-    item.name = props.stockName || ''
-    item.value = Big(props.price || 0)
-    item.weight = Number(props.weight) || 0
-    item.Qty = q
-
-    cart.addItem('stockItem', String(item.stockGuid), item)
-    push.success(`${q} ${props.stockName} added to cart`)
-    closeModal()
-  }
-}
-</script>
-
-<style scoped>
-
-</style>

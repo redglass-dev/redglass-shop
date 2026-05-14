@@ -11,17 +11,17 @@
     "license": "MIT",
     "type": "module",
     "private": true,
-    "scripts": {
-        "build": "vite build",
-        "dev": "vite"
+    "publishConfig": {
+        "@redglass-dev:registry": "https://npm.pkg.github.com"
     },
     "devDependencies": {
-        "@popperjs/core": "^2.11.8",
         "@iconify/vue": "^5.0.0",
+        "@popperjs/core": "^2.11.8",
         "@tailwindcss/vite": "^4.2.2",
         "@types/big.js": "^6.2.2",
         "@vitejs/plugin-vue": "^6.0.0",
         "@vue/language-server": "^3.2.5",
+        "laravel-vue-pagination": "^4.1.3",
         "big.js": "^6.2.2",
         "pinia": "^3.0.4",
         "tailwindcss": "^4.0.0",
@@ -30,19 +30,22 @@
         "vue-tsc": "^3.0.0"
     },
     "dependencies": {
+        "autoprefixer": "^10.4.20",
+        "axios": "^1.11.0",
+        "concurrently": "^9.0.1",
         "date-fns": "^4.1.0",
+        "expr-eval-fork": "^3.0.1",
         "laravel-vue-pagination": "^4.1.3",
+        "lucide-vue-next": "^1.0.0",
         "notivue": "^2.4.5",
         "reka-ui": "^2.8.2",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.2.0",
         "uuid-random": "^1.0.6",
         "vue-feather": "^2.0.0",
         "vue-flatpickr-component": "^11.0.5",
         "vue-multiselect": "^3.1.0",
-        "vuedraggable": "^4.1.0",
-        "expr-eval-fork": "^3.0.1",
         "vue-numeric": "^2.3.0",
-        "autoprefixer": "^10.4.20",
-        "axios": "^1.11.0",
-        "concurrently": "^9.0.1"
+        "vuedraggable": "^4.1.0"
     }
 }
