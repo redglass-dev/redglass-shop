@@ -11,7 +11,6 @@ import StockOptionControl from './StockOptionControl.vue'
 import SurfaceAreaCalculator from './SurfaceAreaCalculator.vue'
 import { FormErrors } from '../Form'
 import {Select, SelectItem, SelectTrigger, SelectValue, SelectContent} from "./ui/select";
-import Helpers from "../Helpers";
 
 const props = defineProps<{
     stockGuid?: string
@@ -92,7 +91,7 @@ const loadStock = (stockData: any) => {
             foreignKey: "stockGuid",
         }]
 
-        let url = `/api/v1/public/stocks?f=nonStockItem:false,type:${StockType.Stock},groupingStockGuid|acc_stock_groupings_stocks|guid|stockGuid|join:${localStock.value.guid}`
+        let url = `/api/v1/public/stocks?h=false&f=nonStockItem:false,type:${StockType.Stock},groupingStockGuid|acc_stock_groupings_stocks|guid|stockGuid|join:${localStock.value.guid}`
         console.log('url', url)
         axios.get(url)
             .then(response => {
@@ -108,10 +107,6 @@ const loadStock = (stockData: any) => {
 function loadCurrentStock(stock: Stock) {
     currentStock.value = stock
     updateOptions()
-}
-
-const currentChanged = (e: any) => {
-    console.log('currentChanged', e)
 }
 
 onMounted(async () => {
@@ -238,7 +233,13 @@ defineExpose({
               </SelectTrigger>
 
               <SelectContent class="border-gray-300 bg-white redglass-input">
-                  <SelectItem v-for="item in groupingStocks" :key="item.guid" :value="item.guid" @select="loadCurrentStock(item)">{{ item.stockDescription }}</SelectItem>
+                  <SelectItem v-for="item in groupingStocks" :key="item.guid" :value="item.guid" @select="loadCurrentStock(item)">
+                      {{ item.stockDescription }}
+                      <div v-if="showPrices">
+                          <span v-if="hasSurfaceArea">${{ ((item.onSale && item.accountInc == item.saleInc) ? (item.retailInc / item.defaultCoverage) : (item.accountInc / item.defaultCoverage)).toFixed(2) }}</span>
+                          <span v-else>${{ ((item.onSale && item.accountInc == item.saleInc) ? item.retailInc : item.accountInc).toFixed(2) }}</span>
+                      </div>
+                  </SelectItem>
               </SelectContent>
           </Select>
 
@@ -248,7 +249,7 @@ defineExpose({
               <div v-if="hasSurfaceArea">
                 <div :class="{ 'line-through opacity-50': currentStock.onSale && currentStock.accountInc >= currentStock.saleInc }">
                   <span class="text-3xl font-bold text-gray-900">
-                    ${{ ((currentStock.onSale && currentStock.accountInc == currentStock.saleInc) ? (currentStock.retailInc / locacurrentStocklStock.defaultCoverage) : (currentStock.accountInc / currentStock.defaultCoverage)).toFixed(2) }}
+                    ${{ ((currentStock.onSale && currentStock.accountInc == currentStock.saleInc) ? (currentStock.retailInc / currentStock.defaultCoverage) : (currentStock.accountInc / currentStock.defaultCoverage)).toFixed(2) }}
                     <span class="text-sm align-baseline">m<sup>2</sup></span>
                   </span>
                 </div>
