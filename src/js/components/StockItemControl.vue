@@ -10,6 +10,7 @@
       :show-buy-buttons="showBuyButtons"
       :show-prices="showPrices"
       :show-unit-type="showUnitType"
+      :show-more-info-button="showMoreInfo"
     >
       <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
         <slot :name="slot" v-bind="scope || {}" />
@@ -39,16 +40,14 @@ const props = defineProps<{
   showOnLoad?: boolean
   jumpToPage?: boolean
   showUnitType?: boolean
+    showMoreInfo?: boolean
 }>()
 
 const localStock = ref(new Stock())
 const loading = ref(false)
-const isModalOpen = ref(false)
-const stockViewControl = ref<any>(null)
 
 const loadStock = (stock: any) => {
   localStock.value = new Stock(stock)
-    console.log('StockItemControl loadStock', localStock.value)
 }
 
 watch(
@@ -81,33 +80,11 @@ onMounted(async () => {
 })
 
 const showStock = () => {
-  //if (props.jumpToPage) {
-    window.location.href = `/products/${localStock.value.pluSlug}`
-  //  return
- // }
-
-  // stockViewControl.value?.update()
-  // nextTick(() => {
-  //   history.replaceState({ modal: true }, '', `/products/${localStock.value.plu}`)
-  //   isModalOpen.value = true
-  // })
-}
-
-const closeModal = () => {
-  isModalOpen.value = false
-  history.replaceState({ modal: false }, '', props.returnUrl || '/')
+    //console.log('showStock', `/products/${localStock.value.pluSlug}`)
+   window.location.href = `/products/${localStock.value.pluSlug}`
 }
 
 defineExpose({
   showStock
 })
 </script>
-
-<!--<docs>-->
-
-<!--A Basic stock item control.-->
-<!--```-->
-<!--<stock-item-control :stock="stockItem"></stock-item-control>-->
-<!--```-->
-
-<!--</docs>-->

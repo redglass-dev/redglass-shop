@@ -1,7 +1,7 @@
 {
     "name": "@redglass-dev/redglass-shop",
     "description": "The frontend assets for the webshop Vue package.",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "main": "src/js/app.ts",
     "files": [
         "src",

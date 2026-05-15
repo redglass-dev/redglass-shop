@@ -40,6 +40,7 @@
               :stock="s"
               :show-buy-buttons="showBuyButtons"
               :show-prices="showPrices"
+              :show-more-info="showMoreInfo"
               :return-url="returnUrl"
             >
               <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
@@ -62,6 +63,7 @@
       :jump-to-page="jumpToPage"
       :stock="stock"
       :hide-in-list="true"
+      :show-more-info="showMoreInfo"
       :show-buy-buttons="showBuyButtons"
       :show-prices="showPrices"
     >
@@ -92,6 +94,7 @@ const props = defineProps<{
   showBuyButtons?: boolean
   showPrices?: boolean
   showStockKey?: string
+  showMoreInfo?: boolean
   returnUrl?: string
   data?: any
   jumpToPage?: boolean
@@ -163,6 +166,8 @@ const asyncLoad = async (page: number = 1) => {
     asyncPage.value = response.data
     asyncPage.value.data = response.data.data.map((record: any) => new Stock(record))
 
+      console.log('asyncPage.value', asyncPage.value)
+
     emit('page-loaded', asyncPage.value)
 
     if (searchStockKey.value) {
@@ -184,7 +189,7 @@ const asyncLoad = async (page: number = 1) => {
 }
 
 onMounted(() => {
-    console.log('onMounted')
+    console.log('onMounted', props.showMoreInfo)
   updateFilter('') // Initial load
   if (searchStockKey.value && stock.value) {
     stockItemRef.value?.showStock()
