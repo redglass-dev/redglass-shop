@@ -64,6 +64,10 @@
     @apply inline-flex items-center px-3 py-2 border border-l-0 border-transparent text-xs font-medium rounded-r-md text-white bg-(--primary-color) hover:bg-(--primary-color)/75 focus:outline-none;
 }
 
+.redglass-btn-register {
+    @apply inline-flex items-center px-3 py-2 border border-l-0 border-transparent text-xs font-medium rounded text-white bg-(--primary-color) hover:bg-(--primary-color)/75 focus:outline-none;
+}
+
 .redglass-btn-checkout {
     @apply border border-transparent text-xs font-medium rounded shadow-sm text-white bg-(--primary-color) hover:bg-(--primary-color)/75 focus:outline-none;
 }
