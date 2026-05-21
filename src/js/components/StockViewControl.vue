@@ -25,6 +25,7 @@ const props = defineProps<{
     showPrices?: boolean
     showUnitType?: boolean
     imageMinWidth?: string
+    imageBoxClass?: string | string[] | Record<string, any>
 }>()
 
 const emit = defineEmits<{
@@ -182,7 +183,7 @@ defineExpose({
             class="flex transition-transform duration-500 ease-in-out h-full"
             :style="{ transform: `translateX(-${activeImageIndex * 100}%)` }"
           >
-            <div v-for="(item, index) in currentStock.images" :key="index" class="w-full h-full flex-shrink-0 flex items-center justify-center">
+            <div v-for="(item, index) in currentStock.images" :key="index" class="w-full h-full shrink-0 flex items-center justify-center" :class="imageBoxClass">
               <img class="max-h-full max-w-full object-contain"
                    :src="`/storage/stocks/${item.stockGuid}/images/${item.guid}.jpg`"
                    :alt="item.description"
