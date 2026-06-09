@@ -12,7 +12,7 @@ import SurfaceAreaCalculator from './SurfaceAreaCalculator.vue'
 import { FormErrors } from '../Form'
 import {Select, SelectItem, SelectTrigger, SelectValue, SelectContent} from "./ui/select";
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     stockGuid?: string
     stock?: any
     accountGuid?: string
@@ -26,7 +26,10 @@ const props = defineProps<{
     showUnitType?: boolean
     imageMinWidth?: string
     imageBoxClass?: string | string[] | Record<string, any>
-}>()
+    limit?: number
+}>(), {
+    limit: 50,
+})
 
 const emit = defineEmits<{
     (e: 'added-to-cart'): void
@@ -92,7 +95,7 @@ const loadStock = (stockData: any) => {
             foreignKey: "stockGuid",
         }]
 
-        let url = `/api/v1/public/stocks?h=false&f=nonStockItem:false,type:${StockType.Stock},groupingStockGuid|acc_stock_groupings_stocks|guid|stockGuid|join:${localStock.value.guid}`
+        let url = `/api/v1/public/stocks?limit=${props.limit}&h=false&f=nonStockItem:false,type:${StockType.Stock},groupingStockGuid|acc_stock_groupings_stocks|guid|stockGuid|join:${localStock.value.guid}`
         console.log('url', url)
         axios.get(url)
             .then(response => {
